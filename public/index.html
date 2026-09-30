@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0b4d32">
+  <meta name="description" content="Expedição Gaúcha — três jogos interativos sobre o Rio Grande do Sul.">
+  <title>Expedição Gaúcha</title>
+  <link rel="stylesheet" href="assets/portal.css">
+</head>
+<body>
+  <div class="page-glow page-glow-a" aria-hidden="true"></div>
+  <div class="page-glow page-glow-b" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Página inicial da Expedição Gaúcha">
+      <span class="brand-mark">RS</span>
+      <span><strong>Expedição Gaúcha</strong><small>Feira Cultural</small></span>
+    </a>
+    <nav class="top-actions" aria-label="Ações do portal">
+      <a class="ranking-link" href="ranking/">🏆 Ranking da Feira</a>
+      <button id="fullscreenBtn" class="icon-btn" type="button" title="Tela cheia" aria-label="Ativar tela cheia">⛶</button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="portal-title">
+      <div class="hero-copy">
+        <span class="eyebrow">RIO GRANDE DO SUL • CONHECER • JOGAR • DESCOBRIR</span>
+        <h1 id="portal-title">Expedição<br><span>Gaúcha</span></h1>
+        <p class="hero-text">Três desafios diferentes para explorar personalidades, história, cultura, lugares e curiosidades do Rio Grande do Sul.</p>
+        <div class="hero-cta-row">
+          <a class="primary-btn" href="#missoes">Escolher uma missão <span>↓</span></a>
+          <a class="secondary-btn" href="ranking/">Ver ranking <span>→</span></a>
+        </div>
+        <div class="hero-badges" aria-label="Informações rápidas">
+          <span><b>3</b> jogos</span>
+          <span><b>1</b> expedição</span>
+          <span><b>∞</b> desafios</span>
+          <span id="todayPlayedBadge"><b>—</b> partidas hoje</span>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-label="Bandeira do Rio Grande do Sul">
+        <div class="flag-frame">
+          <div class="flag-fallback" aria-hidden="true">
+            <span class="flag-green"></span>
+            <span class="flag-yellow"></span>
+            <span class="flag-red"></span>
+            <span class="flag-seal"><b>RS</b><small>1835</small></span>
+          </div>
+          <img
+            class="official-flag"
+            src="https://upload.wikimedia.org/wikipedia/commons/6/63/Bandeira_do_Rio_Grande_do_Sul.svg"
+            alt="Bandeira do Rio Grande do Sul"
+            loading="eager"
+            onerror="this.hidden=true">
+          <div class="flag-caption"><span>✦</span> Terra de histórias, cultura e tradição</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="missions" id="missoes" aria-labelledby="missions-title">
+      <div class="section-heading">
+        <div>
+          <span class="section-kicker">ESCOLHA SUA MISSÃO</span>
+          <h2 id="missions-title">Qual desafio vem primeiro?</h2>
+        </div>
+        <p>Cada jogo funciona de forma independente. Você pode começar por qualquer um.</p>
+      </div>
+
+      <div class="game-grid">
+        <article class="game-card game-card-personalidades">
+          <div class="card-topline"><span>MISSÃO 01</span><span class="status">● PRONTO</span></div>
+          <div class="game-icon" aria-hidden="true">🧩</div>
+          <div class="game-number">01</div>
+          <h3>Descubra o<br>Sul-Rio-Grandense</h3>
+          <p>Revele fragmentos e pistas até descobrir quem é a personalidade misteriosa.</p>
+          <div class="chips"><span>Pistas</span><span>Imagens</span><span>Personalidades</span></div>
+          <a class="play-btn" href="personalidades/">Entrar no desafio <span>→</span></a>
+        </article>
+
+        <article class="game-card game-card-rota">
+          <div class="card-topline"><span>MISSÃO 02</span><span class="status">● PRONTO</span></div>
+          <div class="game-icon" aria-hidden="true">🗺️</div>
+          <div class="game-number">02</div>
+          <h3>Rota pelo<br>Rio Grande do Sul</h3>
+          <p>Responda perguntas sobre geografia, história, cultura, turismo, sabores e esportes.</p>
+          <div class="chips"><span>10 perguntas</span><span>Velocidade</span><span>Conhecimento</span></div>
+          <a class="play-btn" href="rota/">Começar a rota <span>→</span></a>
+        </article>
+
+        <article class="game-card game-card-bah">
+          <div class="card-topline"><span>MISSÃO 03</span><span class="status">● PRONTO</span></div>
+          <div class="game-icon" aria-hidden="true">↔️</div>
+          <div class="game-number">03</div>
+          <h3>Bah ou<br>Não Bah?</h3>
+          <p>Arraste cada cartão para SIM ou NÃO e descubra o que tem forte ligação com o estado.</p>
+          <div class="chips"><span>500 itens</span><span>100 segundos</span><span>Arrastar</span></div>
+          <a class="play-btn" href="bah-ou-nao-bah/">Jogar agora <span>→</span></a>
+        </article>
+      </div>
+    </section>
+
+    <section class="scoreboard-preview" aria-labelledby="score-title">
+      <div class="score-icon" aria-hidden="true">🏆</div>
+      <div class="score-copy">
+        <span class="section-kicker">PLACAR DA EXPEDIÇÃO</span>
+        <h2 id="score-title">Ranking da Feira</h2>
+        <p>Os resultados dos três jogos ficam reunidos aqui. Cada partida concluída é registrada separadamente, junto com as estatísticas de uso de cada jogo.</p>
+      </div>
+      <div class="score-features">
+        <span>✓ Todos os resultados</span>
+        <span>✓ Ranking por jogo</span>
+        <span>✓ Partidas iniciadas e concluídas</span>
+      </div>
+      <a class="ranking-big-btn" href="ranking/">Abrir ranking <span>→</span></a>
+    </section>
+
+    <section class="how-it-works" aria-labelledby="how-title">
+      <div class="section-heading compact">
+        <div><span class="section-kicker">COMO FUNCIONA</span><h2 id="how-title">Uma expedição, três experiências</h2></div>
+      </div>
+      <div class="steps">
+        <div class="step"><b>1</b><span><strong>Escolha</strong> um dos três jogos.</span></div>
+        <div class="step"><b>2</b><span><strong>Jogue</strong> e tente fazer sua melhor pontuação.</span></div>
+        <div class="step"><b>3</b><span><strong>Confira</strong> seu resultado no ranking da feira.</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Expedição Gaúcha</span>
+    <span class="footer-dot">•</span>
+    <span>Feira Cultural</span>
+    <span class="footer-dot">•</span>
+    <span>Rio Grande do Sul</span>
+  </footer>
+
+  <script src="assets/portal.js"></script>
+</body>
+</html>

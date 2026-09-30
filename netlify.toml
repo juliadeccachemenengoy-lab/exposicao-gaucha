@@ -1,0 +1,23 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/iniciar-partida"
+  to = "/.netlify/functions/iniciar-partida"
+  status = 200
+
+[[redirects]]
+  from = "/api/finalizar-partida"
+  to = "/.netlify/functions/finalizar-partida"
+  status = 200
+
+[[redirects]]
+  from = "/api/ranking"
+  to = "/.netlify/functions/ranking"
+  status = 200
+
+[[redirects]]
+  from = "/api/estatisticas"
+  to = "/.netlify/functions/estatisticas"
+  status = 200

@@ -1,0 +1,9 @@
+{
+  "name": "expedicao-gaucha",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Portal Expedição Gaúcha com três jogos, ranking online e estatísticas via Supabase.",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.0.0"
+  }
+}

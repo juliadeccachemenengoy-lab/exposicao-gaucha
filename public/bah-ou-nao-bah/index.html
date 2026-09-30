@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#0d3a2a" />
+  <title>Bah ou Não Bah?</title>
+  <style>
+:root{
+  --green:#0c4a32;--green2:#13784e;--green3:#27b66f;--greenGlow:#4bea9b;
+  --red:#9d1726;--red2:#e33b4c;--redGlow:#ff7080;--yellow:#ffd44f;--yellow2:#f2b727;
+  --cream:#fff7df;--paper:#fffdf4;--ink:#13251d;--muted:#66746d;
+  --shadow:0 26px 70px rgba(4,31,20,.30);--soft-shadow:0 12px 32px rgba(4,31,20,.15);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink)}
+body{min-height:100dvh;overflow-x:hidden;background:
+  radial-gradient(circle at 15% 10%,rgba(255,212,79,.30),transparent 26%),
+  radial-gradient(circle at 88% 12%,rgba(227,59,76,.18),transparent 24%),
+  radial-gradient(circle at 72% 88%,rgba(39,182,111,.23),transparent 30%),
+  linear-gradient(145deg,#fdf7e8 0%,#e8f1e8 46%,#d8eadf 100%)}
+body::before,body::after{content:"";position:fixed;z-index:-1;pointer-events:none;filter:blur(1px);opacity:.8}
+body::before{width:520px;height:130px;left:-120px;top:8%;transform:rotate(-12deg);background:linear-gradient(90deg,var(--green2) 0 42%,var(--yellow) 42% 57%,var(--red2) 57%);border-radius:999px;box-shadow:0 30px 80px #0c4a3230}
+body::after{width:620px;height:150px;right:-190px;bottom:7%;transform:rotate(-12deg);background:linear-gradient(90deg,var(--green2) 0 42%,var(--yellow) 42% 57%,var(--red2) 57%);border-radius:999px;box-shadow:0 30px 80px #0c4a3230}
+button,input{font:inherit}button{cursor:pointer}.app-shell{min-height:100dvh;display:grid;place-items:center;padding:max(18px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+.screen{display:none;width:min(1220px,100%)}.screen.active{display:block}
+.screen-start,.screen-result{position:relative;overflow:hidden;max-width:820px;text-align:center;background:linear-gradient(155deg,rgba(255,253,244,.96),rgba(255,247,223,.92));backdrop-filter:blur(14px);border:1px solid rgba(12,74,50,.17);border-radius:38px;padding:clamp(26px,5vw,52px);box-shadow:var(--shadow)}
+.screen-start::after,.screen-result::after{content:"";position:absolute;width:240px;height:240px;border-radius:50%;right:-100px;bottom:-125px;background:radial-gradient(circle,var(--yellow) 0 34%,transparent 35%);opacity:.16;pointer-events:none}
+.start-stripe{position:absolute;inset:0 0 auto;height:10px;display:flex}.start-stripe i{flex:1}.start-stripe i:nth-child(1){background:var(--green2)}.start-stripe i:nth-child(2){background:var(--yellow)}.start-stripe i:nth-child(3){background:var(--red2)}
+.hero-mark{width:128px;height:128px;border-radius:36px;margin:0 auto 16px;position:relative;overflow:hidden;box-shadow:0 18px 40px rgba(12,74,50,.32);transform:rotate(-3deg);border:6px solid #fff;isolation:isolate}
+.flag-band{position:absolute;inset:0}.flag-band.green{background:#177448;clip-path:polygon(0 0,100% 0,0 100%)}.flag-band.red{background:#c52636;clip-path:polygon(100% 0,100% 100%,0 100%)}.flag-band.yellow{background:#ffd34a;clip-path:polygon(0 43%,100% 0,100% 24%,0 70%)}
+.hero-mark::after{content:"";position:absolute;inset:12px;border:2px solid #ffffff55;border-radius:24px}.hero-badge{position:absolute;inset:0;display:grid;place-items:center;font-weight:1000;color:white;font-size:24px;letter-spacing:.04em;text-shadow:0 3px 10px #0009;z-index:3}
+.eyebrow{margin:0 0 8px;font-size:.76rem;font-weight:1000;letter-spacing:.18em;color:var(--red);text-transform:uppercase}
+h1,h2{font-family:Georgia,"Times New Roman",serif;margin:0;line-height:.94;color:var(--green);font-weight:900;text-wrap:balance}h1{font-size:clamp(3.2rem,9vw,6.4rem)}h2{font-size:clamp(2.5rem,7vw,4.8rem)}
+.subtitle{font-size:clamp(1.05rem,3vw,1.43rem);margin:17px auto 18px;color:#3d5147;font-weight:750;text-wrap:balance}
+.feature-row{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin:0 auto 21px}.feature-row span{background:#fff;border:1px solid #e6dec8;border-radius:999px;padding:8px 12px;font-size:.79rem;color:#536159;font-weight:800;box-shadow:0 5px 14px #14372a10}.feature-row strong{color:var(--green)}
+.rules-card{display:grid;grid-template-columns:1fr 1.1fr 1fr;gap:10px;align-items:stretch;margin:20px 0;background:#e9e0c8;border-radius:26px;padding:8px;border:1px solid #ddd0ae;box-shadow:inset 0 1px #fff8}
+.rule{padding:14px 10px;border-radius:19px;background:#fffaf0;display:grid;place-items:center;align-content:center;gap:4px;min-height:108px}.rule-icon{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:white;font-size:1.5rem;box-shadow:0 8px 16px #0002}.rule-yes .rule-icon{background:linear-gradient(145deg,var(--green3),var(--green2))}.rule-no .rule-icon{background:linear-gradient(145deg,var(--red2),var(--red))}.rule-time .rule-icon{background:linear-gradient(145deg,var(--yellow),var(--yellow2));color:#664a00}.rules-card strong{font-size:1rem}.rules-card span{font-size:.75rem;color:var(--muted);font-weight:650}
+.name-field{text-align:left;display:grid;gap:8px;margin:19px auto 14px;max-width:500px}.name-field span{font-weight:900;color:#364b40}.name-field input{width:100%;border:2px solid #d9d1bd;border-radius:17px;padding:15px 17px;background:white;outline:none;font-size:1.06rem;box-shadow:inset 0 1px 3px #00000008}.name-field input:focus{border-color:var(--green2);box-shadow:0 0 0 5px rgba(19,120,78,.12)}
+.start-actions{display:flex;justify-content:center;align-items:center;gap:10px;flex-wrap:wrap}.primary-btn,.ghost-btn,.link-btn{border:0;border-radius:17px;padding:15px 22px;font-weight:950;transition:.16s ease}.primary-btn{background:linear-gradient(135deg,var(--green2),var(--green));color:#fff;box-shadow:0 12px 26px rgba(12,74,50,.26)}.primary-btn:hover{transform:translateY(-2px);box-shadow:0 16px 30px rgba(12,74,50,.29)}.big-btn{min-width:245px;display:inline-flex;align-items:center;justify-content:center;gap:14px;font-size:1.06rem}.big-btn b{font-size:1.35rem}.ghost-btn{background:white;color:var(--green);border:2px solid #dbe2dd}.ghost-btn:hover{border-color:#b9c9bf;transform:translateY(-1px)}.link-btn{background:transparent;color:#52645b;text-decoration:underline}.tiny-note{margin:16px 0 0;color:#728079;font-size:.8rem}
+
+.screen-game{height:calc(100dvh - max(36px,env(safe-area-inset-top)));min-height:620px;display:none;grid-template-rows:auto 8px auto 1fr auto;gap:11px;position:relative}.screen-game.active{display:grid}
+.game-topbar{display:grid;grid-template-columns:minmax(150px,1fr) repeat(3,minmax(100px,145px));gap:10px}.player-pill,.stat-pill{background:rgba(255,253,244,.96);border:1px solid rgba(12,74,50,.14);border-radius:18px;padding:9px 13px;box-shadow:var(--soft-shadow);display:grid;position:relative;overflow:hidden}.player-pill::before,.stat-pill::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:#d8dfda}.time-pill::before{background:var(--yellow2)}.score-pill::before{background:var(--green3)}.streak-pill::before{background:var(--red2)}.player-pill span,.stat-pill span{font-size:.67rem;text-transform:uppercase;letter-spacing:.08em;color:#6e7b74;font-weight:900}.player-pill strong,.stat-pill strong{font-size:1.16rem;color:var(--green);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.time-pill strong{font-variant-numeric:tabular-nums}.score-pill.pop strong{animation:scorePop .28s ease}.streak-pill.hot{background:linear-gradient(145deg,#fff8e5,#ffecc2);border-color:#f1cb62}.time-pill.urgent{background:#fff0ed;border-color:#f2aaa0}.time-pill.urgent strong{color:#b32626;animation:pulse .55s infinite alternate}@keyframes pulse{to{transform:scale(1.06)}}@keyframes scorePop{50%{transform:scale(1.18);color:var(--green3)}}
+.time-track{height:8px;border-radius:999px;background:#ffffffa6;border:1px solid #dfe5df;overflow:hidden;box-shadow:inset 0 1px 2px #0001}.time-track span{display:block;height:100%;width:100%;border-radius:inherit;background:linear-gradient(90deg,var(--green3),var(--yellow),var(--red2));transform-origin:left center;transition:width .08s linear}
+.question-wrap{text-align:center}.question-kicker{display:inline-block;background:#173f2f;color:white;border-radius:999px;padding:5px 10px;font-size:.63rem;font-weight:950;letter-spacing:.13em;margin-bottom:5px;box-shadow:0 5px 12px #173f2f1f}.question-fixed{font-family:Georgia,"Times New Roman",serif;font-size:clamp(1.14rem,2.8vw,1.72rem);font-weight:900;color:var(--green);margin:0 0 5px}.progress-line{display:flex;justify-content:center;gap:22px;color:#64736b;font-size:.76rem;font-weight:850}
+.play-area{min-height:0;display:grid;grid-template-columns:minmax(165px,1fr) minmax(330px,1.8fr) minmax(165px,1fr);gap:17px;align-items:stretch;position:relative}
+.choice-zone{border:0;border-radius:32px;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;color:#fff;transition:.18s ease;box-shadow:inset 0 0 0 2px #ffffff24,0 20px 42px #00000018;position:relative;overflow:hidden}.choice-zone::before{content:"";position:absolute;width:170%;height:70%;top:-38%;left:-35%;transform:rotate(-18deg);background:#ffffff12}.choice-zone strong{font-size:clamp(2rem,5vw,4.1rem);font-weight:1000;line-height:.95}.choice-zone small{max-width:155px;font-weight:750;opacity:.88}.choice-symbol{width:74px;height:74px;border-radius:50%;display:grid;place-items:center;font-size:3rem;font-weight:1000;background:#ffffff20;border:2px solid #ffffff42;box-shadow:0 10px 24px #0002}.choice-arrow{font-size:.82rem;text-transform:uppercase;letter-spacing:.1em;margin-top:10px;font-weight:950;opacity:.8}.choice-yes{background:linear-gradient(145deg,#2cbc77,#0b4b32)}.choice-no{background:linear-gradient(145deg,#f05a67,#8f1522)}.choice-zone.active{transform:scale(1.035);filter:saturate(1.35) brightness(1.08);box-shadow:inset 0 0 0 4px #fff8,0 24px 48px #0002}.choice-zone.pulse-choice{animation:choicePulse .34s ease}@keyframes choicePulse{50%{transform:scale(1.055);filter:brightness(1.14)}}
+.card-stage{min-width:0;display:grid;place-items:center;position:relative;perspective:1200px}
+.term-card{width:min(100%,650px);height:min(49vh,440px);min-height:282px;background:linear-gradient(158deg,#fffef9 0%,#fff7df 72%,#f6e8bf 100%);border:2px solid #ead9a9;border-radius:36px;box-shadow:0 30px 70px rgba(13,49,33,.24),0 2px 0 #fff inset;display:grid;place-items:center;align-content:center;gap:13px;padding:36px;position:relative;touch-action:none;user-select:none;will-change:transform;transition:transform .28s cubic-bezier(.2,.85,.2,1),opacity .22s ease,box-shadow .18s ease;overflow:hidden;outline:none;isolation:isolate}.term-card::before{content:"";position:absolute;inset:12px;border:1px solid #d8c58f88;border-radius:27px;pointer-events:none}.term-card.dragging{transition:none;box-shadow:0 40px 86px rgba(13,49,33,.33)}.term-card.snap-back{animation:snapBack .3s cubic-bezier(.24,.82,.3,1.18)}@keyframes snapBack{0%{filter:brightness(1)}55%{filter:brightness(1.03)}100%{filter:none}}.term-card p{margin:0;max-width:95%;text-align:center;font-family:Georgia,"Times New Roman",serif;font-size:clamp(2.1rem,5.2vw,4.8rem);line-height:1.01;font-weight:900;color:#123a29;overflow-wrap:anywhere;text-wrap:balance;text-shadow:0 1px #fff}.term-card.long p{font-size:clamp(1.65rem,4.25vw,3.65rem)}.term-card.very-long p{font-size:clamp(1.4rem,3.55vw,2.75rem)}.card-kicker{text-transform:uppercase;letter-spacing:.16em;font-size:.67rem;font-weight:1000;color:#9b7840}.drag-hint{text-transform:uppercase;letter-spacing:.10em;color:#85785d;font-weight:950;font-size:.70rem;display:flex;align-items:center;gap:6px}.drag-hint b{font-size:1rem;color:#476657}.difficulty-dot{width:10px;height:10px;border-radius:999px;background:#73b98f;box-shadow:0 0 0 6px #73b98f22}.term-card.medium .difficulty-dot{background:#d7a72c;box-shadow:0 0 0 6px #d7a72c22}.term-card.hard .difficulty-dot{background:#bc4149;box-shadow:0 0 0 6px #bc414922}.card-shine{position:absolute;width:65%;height:180%;background:linear-gradient(90deg,transparent,#ffffff9f,transparent);transform:rotate(25deg);left:-80%;top:-40%;pointer-events:none;z-index:2}.term-card.enter{animation:cardIn .38s cubic-bezier(.17,.88,.32,1.25)}.term-card.enter .card-shine{animation:shine .68s ease}@keyframes shine{to{left:140%}}@keyframes cardIn{0%{transform:translateY(18px) scale(.94);opacity:0}100%{transform:none;opacity:1}}
+.term-card::after{content:"";position:absolute;inset:0;border-radius:inherit;opacity:var(--dragAlpha,0);pointer-events:none;transition:opacity .05s;z-index:-1}.term-card.drag-left::after{background:linear-gradient(120deg,#32c37b88,transparent 65%)}.term-card.drag-right::after{background:linear-gradient(240deg,#eb455488,transparent 65%)}
+.swipe-stamp{position:absolute;top:36px;border:5px solid currentColor;border-radius:12px;padding:5px 10px;font-weight:1000;font-size:clamp(1.25rem,3vw,2rem);letter-spacing:.04em;opacity:0;transition:opacity .06s;z-index:5;transform:rotate(-9deg)}.stamp-yes{left:26px;color:#148153}.stamp-no{right:26px;color:#bd2332;transform:rotate(9deg)}.term-card.drag-left .stamp-yes,.term-card.drag-right .stamp-no{opacity:calc(var(--dragAlpha,0) * 1.6)}
+.feedback{position:absolute;z-index:12;left:50%;bottom:6%;transform:translate(-50%,18px) scale(.97);width:min(94%,680px);opacity:0;pointer-events:none;background:#14251ff4;color:white;border-radius:20px;padding:13px 17px;text-align:center;box-shadow:0 14px 34px #0005;transition:.17s ease;border:1px solid #ffffff25}.feedback.show{opacity:1;transform:translate(-50%,0) scale(1)}.feedback strong{display:block;font-size:1.06rem}.feedback span{font-size:.82rem;opacity:.91}.feedback.correct{background:#0e6744f5}.feedback.wrong{background:#9d2030f5}.feedback.bonus{outline:4px solid #ffd44f;box-shadow:0 0 0 7px #ffd44f25,0 14px 34px #0005}
+.score-burst,.combo-burst{position:absolute;z-index:16;left:50%;top:17%;transform:translate(-50%,10px) scale(.7);opacity:0;pointer-events:none;font-weight:1000;text-shadow:0 3px 10px #0003}.score-burst{color:#0f8b57;font-size:clamp(2rem,5vw,3.3rem)}.score-burst.show{animation:burst .55s ease}.combo-burst{color:#a53a00;background:#ffd44f;border:3px solid #fff5c8;border-radius:999px;padding:7px 14px;font-size:clamp(.9rem,2vw,1.25rem);box-shadow:0 10px 25px #0002;top:30%}.combo-burst.show{animation:combo .85s ease}@keyframes burst{0%{opacity:0;transform:translate(-50%,20px) scale(.65)}35%{opacity:1;transform:translate(-50%,-8px) scale(1.08)}100%{opacity:0;transform:translate(-50%,-38px) scale(1)}}@keyframes combo{0%{opacity:0;transform:translate(-50%,8px) scale(.7)}25%,70%{opacity:1;transform:translate(-50%,0) scale(1)}100%{opacity:0;transform:translate(-50%,-15px) scale(.95)}}
+.record-burst{position:absolute;z-index:19;left:50%;top:42%;transform:translate(-50%,-50%) scale(.55);opacity:0;pointer-events:none;background:linear-gradient(135deg,#fff2a9,#ffc64e);color:#6b3200;border:4px solid #fff8cf;border-radius:999px;padding:12px 20px;font-weight:1000;font-size:clamp(1rem,2.6vw,1.55rem);letter-spacing:.035em;box-shadow:0 18px 42px #7e50004d,0 0 0 9px #ffd44f25;text-align:center;white-space:nowrap}.record-burst.show{animation:recordBurst 1.25s cubic-bezier(.2,.85,.2,1)}@keyframes recordBurst{0%{opacity:0;transform:translate(-50%,-50%) scale(.5) rotate(-4deg)}18%,70%{opacity:1;transform:translate(-50%,-50%) scale(1.05) rotate(0)}100%{opacity:0;transform:translate(-50%,-70%) scale(.94)}}
+
+.mobile-actions{display:none;grid-template-columns:1fr 1fr;gap:10px}.mobile-choice{border:0;border-radius:20px;padding:11px 12px;color:#fff;font-weight:1000;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;align-items:center;column-gap:9px;box-shadow:0 10px 24px #0002}.mobile-choice>span{grid-row:1/3;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:#ffffff20;font-size:1.7rem}.mobile-choice b{font-size:1.15rem;line-height:1}.mobile-choice small{font-size:.65rem;opacity:.75}.mobile-choice.yes{background:linear-gradient(135deg,#1f9c65,#0f5b3c)}.mobile-choice.no{background:linear-gradient(135deg,#e34554,#9d1827)}
+.countdown-overlay{position:absolute;inset:-6px;z-index:40;display:grid;place-items:center;background:rgba(8,43,29,.72);backdrop-filter:blur(10px);border-radius:28px;opacity:0;pointer-events:none;transition:.2s}.countdown-overlay.show{opacity:1;pointer-events:auto}.countdown-ring{width:min(250px,55vw);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;align-content:center;color:white;background:radial-gradient(circle,#1b6548 0 55%,#0a3525 56% 100%);border:9px solid #ffd44f;box-shadow:0 0 0 9px #ffffff22,0 28px 70px #0006}.countdown-ring strong{font-family:Georgia,"Times New Roman",serif;font-size:clamp(5rem,17vw,9rem);line-height:.85}.countdown-ring span{font-weight:900;margin-top:10px;letter-spacing:.04em}.countdown-ring.pop{animation:countPop .4s ease}@keyframes countPop{50%{transform:scale(1.1)}}
+.screen-flash{position:absolute;inset:-15px;z-index:30;pointer-events:none;opacity:0;border-radius:34px}.screen-flash.correct{animation:flashGreen .34s ease}.screen-flash.wrong{animation:flashRed .38s ease}@keyframes flashGreen{0%,100%{opacity:0}35%{opacity:1;background:#31d67b30;box-shadow:inset 0 0 90px #23b66688}}@keyframes flashRed{0%,100%{opacity:0}35%{opacity:1;background:#ef445030;box-shadow:inset 0 0 90px #df324288}}
+
+.screen-result{max-width:800px}.result-confetti{position:absolute;inset:0;pointer-events:none;opacity:.22;background-image:radial-gradient(circle,#ffd44f 0 3px,transparent 4px),radial-gradient(circle,#19a567 0 3px,transparent 4px),radial-gradient(circle,#d83242 0 3px,transparent 4px);background-size:64px 64px,83px 83px,101px 101px;background-position:3px 11px,23px 40px,50px 5px}.result-medal{position:relative;font-size:4.8rem;filter:drop-shadow(0 11px 13px #0002);animation:medalIn .55s cubic-bezier(.17,.88,.32,1.25)}@keyframes medalIn{0%{transform:scale(.45) rotate(-12deg);opacity:0}100%{transform:none;opacity:1}}.result-class{position:relative;font-weight:950;color:var(--red);font-size:1.18rem;margin:12px 0 22px}.final-score{position:relative;width:min(350px,92%);margin:auto;background:linear-gradient(145deg,#0f4b34,#1c8158);color:white;border-radius:26px;padding:19px;border:2px solid #5cdca0;box-shadow:0 16px 32px #0d4a322c}.final-score span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.12em;opacity:.82}.final-score strong{font-size:3.2rem}.result-grid{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.result-grid>div{background:#fff;border:1px solid #e4dfd1;border-radius:18px;padding:13px;box-shadow:0 6px 15px #00000008}.result-grid span{display:block;font-size:.73rem;color:#6e7b74;font-weight:800}.result-grid strong{display:block;color:var(--green);font-size:1.48rem;margin-top:4px}.result-actions{position:relative;display:flex;justify-content:center;align-items:center;gap:8px;flex-wrap:wrap}.result-insight{position:relative;margin:2px auto 16px;width:min(620px,96%);padding:13px 16px;border-radius:18px;background:#fff7df;border:1px solid #ead59b;color:#49594f;font-weight:800;line-height:1.35;box-shadow:0 6px 16px #0000000b}.result-insight strong{color:var(--green)}.next-player-btn{flex-basis:100%;max-width:420px;background:linear-gradient(135deg,#177e52,#0c4a32);font-size:1.08rem;padding:16px 26px}.auto-reset-note{position:relative;margin:12px 0 0;color:#748078;font-size:.78rem;font-weight:750}.auto-reset-note strong{color:var(--red)}
+
+.ranking-dialog{width:min(700px,calc(100% - 24px));border:0;border-radius:30px;padding:26px;background:#fffdf6;color:var(--ink);box-shadow:0 30px 80px #0005}.ranking-dialog::backdrop{background:#0d2c20c7;backdrop-filter:blur(6px)}.ranking-head{display:flex;justify-content:space-between;align-items:start}.ranking-head h2{font-size:2.35rem}.close-btn{border:0;background:#efe9db;border-radius:999px;width:42px;height:42px;font-size:1.7rem;line-height:1}.ranking-note{text-align:left;color:#738079;font-size:.83rem}.ranking-list{display:grid;gap:8px;margin:16px 0}.rank-row{display:grid;grid-template-columns:46px 1fr auto;gap:10px;align-items:center;border:1px solid #e8e1d0;border-radius:16px;padding:10px 12px;background:#fff;box-shadow:0 4px 12px #00000008}.rank-row:nth-child(-n+3){background:linear-gradient(90deg,#fffaf0,#fff)}.rank-pos{font-weight:1000;color:var(--red);font-size:1.15rem}.rank-name{text-align:left;font-weight:900}.rank-meta{text-align:right}.rank-meta strong{display:block;color:var(--green)}.rank-meta small{color:#738079}.ranking-empty{padding:28px;border:2px dashed #ded6c3;border-radius:18px;color:#7e887f}.danger-link{border:0;background:transparent;color:#a52a34;text-decoration:underline;font-weight:800}
+
+@media(max-width:760px){
+  body::before{width:370px;height:92px;left:-130px;top:5%}body::after{width:400px;height:100px;right:-160px;bottom:5%}
+  .app-shell{padding:9px}.screen-start,.screen-result{border-radius:26px;padding:24px 16px}.hero-mark{width:104px;height:104px;border-radius:29px}.hero-badge{font-size:20px}.feature-row{gap:6px}.feature-row span{font-size:.7rem;padding:7px 9px}.rules-card{grid-template-columns:1fr 1fr}.rule-time{grid-column:1/-1;grid-row:2}.rule{min-height:88px}.start-actions{display:grid}.start-actions>*{width:100%}.screen-game{height:calc(100dvh - 18px);min-height:570px;gap:7px;grid-template-rows:auto 6px auto 1fr auto}.game-topbar{grid-template-columns:1.15fr 1fr 1fr}.streak-pill{display:none}.player-pill,.stat-pill{padding:7px 9px;border-radius:14px}.player-pill strong,.stat-pill strong{font-size:1rem}.time-track{height:6px}.question-kicker{font-size:.55rem}.question-fixed{font-size:1.03rem;margin-bottom:3px}.progress-line{font-size:.68rem;gap:12px}.play-area{grid-template-columns:1fr;min-height:0}.choice-zone{display:none}.card-stage{height:100%}.term-card{height:min(55vh,460px);min-height:295px;border-radius:29px;padding:23px}.term-card::before{inset:9px;border-radius:22px}.card-kicker{font-size:.6rem}.mobile-actions{display:grid}.result-grid{grid-template-columns:1fr 1fr}.feedback{bottom:5%;padding:11px 13px}.feedback span{font-size:.76rem}.countdown-overlay{border-radius:24px}.score-burst{top:12%}.combo-burst{top:27%}
+}
+@media(max-width:390px){.term-card{min-height:260px}.term-card p{font-size:2.25rem}.term-card.long p{font-size:1.78rem}.term-card.very-long p{font-size:1.43rem}.game-topbar{gap:5px}.player-pill span,.stat-pill span{font-size:.58rem}.progress-line{font-size:.64rem}.mobile-choice{padding:9px}.mobile-choice>span{width:36px;height:36px;font-size:1.45rem}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+
+
+/* ===== V3 — EXPERIÊNCIA DE JOGO ===== */
+:root{
+  --glass:rgba(255,253,244,.84);
+  --gold:#ffcf3f;
+  --night:#082a20;
+}
+body{
+  background:
+    radial-gradient(circle at 12% 14%,rgba(255,210,64,.38),transparent 24%),
+    radial-gradient(circle at 86% 15%,rgba(215,43,57,.24),transparent 23%),
+    radial-gradient(circle at 75% 84%,rgba(22,136,83,.30),transparent 28%),
+    repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 2px,transparent 2px 18px),
+    linear-gradient(145deg,#f9f2d8 0%,#e3efe2 42%,#cce6d6 100%);
+}
+.app-shell{position:relative;isolation:isolate}
+.app-shell::before{
+  content:"RS";position:fixed;z-index:-2;left:50%;top:52%;transform:translate(-50%,-50%) rotate(-7deg);
+  font-family:Georgia,"Times New Roman",serif;font-weight:1000;font-size:min(48vw,620px);line-height:.7;
+  color:rgba(9,70,46,.035);letter-spacing:-.08em;pointer-events:none;user-select:none;
+}
+.ambient-decor{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;user-select:none}
+.ambient-decor span{position:absolute;opacity:.075;filter:saturate(.8);font-size:clamp(48px,7vw,110px);transform:rotate(var(--rot,0deg))}
+.ambient-decor span:nth-child(1){left:3%;top:20%;--rot:-14deg}.ambient-decor span:nth-child(2){right:5%;top:31%;--rot:11deg}.ambient-decor span:nth-child(3){left:8%;bottom:8%;font-size:clamp(70px,10vw,150px);font-weight:1000;color:var(--green);--rot:-8deg}.ambient-decor span:nth-child(4){right:8%;bottom:13%;--rot:12deg}
+.sound-toggle{position:fixed;z-index:80;right:max(14px,env(safe-area-inset-right));top:max(14px,env(safe-area-inset-top));width:48px;height:48px;border:1px solid rgba(12,74,50,.18);border-radius:50%;background:rgba(255,253,244,.92);box-shadow:0 10px 28px rgba(5,43,28,.17);display:grid;place-items:center;font-size:1.25rem;transition:.18s ease;backdrop-filter:blur(12px)}
+.sound-toggle:hover{transform:translateY(-2px) scale(1.03)}.sound-toggle.muted{opacity:.64;filter:grayscale(.5)}
+.fullscreen-toggle{position:fixed;z-index:80;right:74px;top:max(14px,env(safe-area-inset-top));width:48px;height:48px;border:1px solid rgba(12,74,50,.18);border-radius:50%;background:rgba(255,253,244,.92);box-shadow:0 10px 28px rgba(5,43,28,.17);display:grid;place-items:center;font-size:1.28rem;transition:.18s ease;backdrop-filter:blur(12px);color:var(--green);font-weight:1000}.fullscreen-toggle:hover{transform:translateY(-2px) scale(1.03)}
+
+.screen-start,.screen-result{box-shadow:0 34px 90px rgba(4,31,20,.35),inset 0 1px rgba(255,255,255,.8)}
+.hero-mark{animation:heroFloat 4.2s ease-in-out infinite}@keyframes heroFloat{50%{transform:rotate(2deg) translateY(-5px)}}
+.primary-btn{position:relative;overflow:hidden}.primary-btn::after{content:"";position:absolute;inset:-100% auto -100% -45%;width:38%;transform:rotate(18deg);background:linear-gradient(90deg,transparent,#fff8,transparent);transition:left .55s ease}.primary-btn:hover::after{left:120%}
+
+.screen-game{isolation:isolate}
+.screen-game::before{content:"";position:absolute;inset:-10px;z-index:-1;border-radius:32px;background:linear-gradient(145deg,rgba(255,255,255,.26),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.24);box-shadow:0 24px 70px rgba(4,31,20,.12);backdrop-filter:blur(4px)}
+.game-topbar{position:relative;z-index:5;padding-right:58px}.player-pill,.stat-pill{backdrop-filter:blur(14px);border-color:rgba(255,255,255,.52);box-shadow:0 12px 28px rgba(5,43,28,.14)}
+.streak-pill.level-1 strong{color:#c36b05}.streak-pill.level-2{background:linear-gradient(145deg,#fff8da,#ffe39a);box-shadow:0 0 0 2px #ffd24a55,0 12px 28px #7a4a001e}.streak-pill.level-2 strong{color:#a04b00}.streak-pill.level-3{background:linear-gradient(145deg,#fff1c8,#ffd467);animation:streakGlow .8s ease-in-out infinite alternate}.streak-pill.level-3 strong{color:#9d251f}.streak-pill.level-4{background:linear-gradient(135deg,#ffd850,#ff8a32,#df3043);color:#fff;animation:streakGlow .45s ease-in-out infinite alternate}.streak-pill.level-4 span,.streak-pill.level-4 strong{color:#fff;text-shadow:0 2px 8px #6f1c1c55}@keyframes streakGlow{to{transform:translateY(-2px);box-shadow:0 0 0 3px #ffd44f44,0 18px 38px #9d5a002e}}
+.time-track{height:10px;background:rgba(255,255,255,.56);box-shadow:inset 0 2px 5px #0001,0 4px 10px #0001}.time-track span{background:linear-gradient(90deg,#24b76d,#58c979);box-shadow:0 0 14px rgba(39,182,111,.35)}.time-track.warning span{background:linear-gradient(90deg,#f0bd2d,#ffd85c)}.time-track.danger span{background:linear-gradient(90deg,#d62439,#ff5a5a);box-shadow:0 0 18px rgba(215,36,57,.45)}
+.question-kicker{background:linear-gradient(135deg,#0d4932,#186849);box-shadow:0 8px 20px rgba(10,77,49,.19)}
+
+.play-area{perspective:1300px}
+.choice-zone{transform:translateZ(0);border:2px solid rgba(255,255,255,.22);transition:transform .2s cubic-bezier(.2,.8,.2,1),box-shadow .2s ease,filter .2s ease}
+.choice-zone .drop-label{opacity:0;transform:translateY(8px) scale(.9);padding:7px 11px;border-radius:999px;background:#fff;color:inherit;font-size:.69rem;font-weight:1000;letter-spacing:.09em;transition:.16s ease;box-shadow:0 8px 18px #0002}
+.choice-yes .drop-label{color:var(--green)}.choice-no .drop-label{color:var(--red)}
+.choice-zone.active{transform:scale(1.035) translateY(-2px);filter:saturate(1.18) brightness(1.05)}
+.choice-zone.active .choice-symbol{transform:scale(1.11);box-shadow:0 0 0 9px #ffffff15,0 14px 30px #0003}.choice-zone.active .drop-label{opacity:1;transform:translateY(0) scale(1)}
+.choice-yes.active{box-shadow:inset 0 0 0 3px #7dffc366,0 0 0 5px #1bd57b2e,0 24px 55px rgba(13,114,69,.33)}
+.choice-no.active{box-shadow:inset 0 0 0 3px #ff9ca766,0 0 0 5px #f04d5d2c,0 24px 55px rgba(165,27,42,.31)}
+.choice-symbol{transition:.18s ease}
+.card-stage{position:relative;filter:drop-shadow(0 20px 28px rgba(7,49,32,.11))}
+.term-card{background:
+  linear-gradient(135deg,rgba(255,255,255,.82),rgba(255,255,255,.18)),
+  repeating-linear-gradient(0deg,rgba(25,71,49,.018) 0 1px,transparent 1px 5px),
+  var(--paper);border:2px solid rgba(12,74,50,.18);box-shadow:0 30px 70px rgba(6,49,32,.25),0 6px 12px rgba(6,49,32,.08),inset 0 1px #fff;transform-style:preserve-3d;transition:box-shadow .18s ease,filter .18s ease}
+.term-card::after{content:"";position:absolute;inset:auto 14% 9px;height:12px;border-radius:50%;background:rgba(4,31,20,.11);filter:blur(9px);z-index:-1;transition:.18s ease}
+.term-card:not(.dragging){animation:cardIdle 3.3s ease-in-out infinite}@keyframes cardIdle{50%{transform:translateY(-4px) rotateX(1deg);box-shadow:0 36px 76px rgba(6,49,32,.27),0 8px 14px rgba(6,49,32,.08),inset 0 1px #fff}}
+.term-card.dragging{animation:none;cursor:grabbing;box-shadow:0 42px 90px rgba(6,49,32,.32),0 11px 25px rgba(6,49,32,.13)}
+.term-card.drag-left{background:linear-gradient(135deg,rgba(218,255,235,.92),rgba(255,255,255,.88)),var(--paper);border-color:rgba(25,170,100,.58)}
+.term-card.drag-right{background:linear-gradient(135deg,rgba(255,224,227,.94),rgba(255,255,255,.88)),var(--paper);border-color:rgba(222,52,70,.55)}
+.drag-hint{animation:hintPulse 2.2s ease-in-out infinite}@keyframes hintPulse{50%{opacity:.52;transform:translateY(2px)}}
+.mobile-choice{transition:.16s ease}.mobile-choice.active{transform:translateY(-3px) scale(1.02);filter:saturate(1.14);box-shadow:0 16px 28px #0002}
+
+.feedback{max-width:min(540px,92%);border:1px solid rgba(255,255,255,.55);backdrop-filter:blur(15px);box-shadow:0 20px 46px rgba(4,31,20,.24)}
+.feedback.correct strong{color:#0a673e}.feedback.wrong strong{color:#a81f2f}.feedback .fact-highlight{display:inline;font-weight:900;color:var(--ink)}
+.score-burst.show{font-size:clamp(2.2rem,6vw,4.5rem);text-shadow:0 5px 22px rgba(20,122,74,.28)}
+.combo-burst.show{padding:10px 17px;border-radius:999px;background:linear-gradient(135deg,#ffd74d,#ff9b35);color:#6b2700;box-shadow:0 16px 40px #ad5a002b;border:2px solid #fff8}
+.screen-flash.correct{background:radial-gradient(circle,rgba(54,222,131,.28),rgba(54,222,131,.02) 60%,transparent 78%)}.screen-flash.wrong{background:radial-gradient(circle,rgba(243,70,86,.27),rgba(243,70,86,.02) 60%,transparent 78%)}
+
+.urgent-countdown{position:fixed;z-index:45;left:50%;top:43%;transform:translate(-50%,-50%) scale(.5);font-family:Georgia,"Times New Roman",serif;font-size:clamp(5rem,18vw,11rem);font-weight:1000;color:#c52334;text-shadow:0 8px 0 #fff,0 20px 45px #841a2445;opacity:0;pointer-events:none}.urgent-countdown.pop{animation:urgentPop .7s cubic-bezier(.2,.85,.24,1)}@keyframes urgentPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.35)}25%{opacity:.9;transform:translate(-50%,-50%) scale(1.05)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.25)}}
+
+.tutorial-overlay{position:absolute;inset:-10px;z-index:70;display:none;place-items:center;padding:16px;border-radius:34px;background:rgba(7,42,31,.84);backdrop-filter:blur(13px)}.tutorial-overlay.show{display:grid}.tutorial-panel{width:min(760px,96%);background:linear-gradient(155deg,#fffdf5,#fff5d7);border-radius:32px;padding:clamp(20px,4vw,36px);box-shadow:0 32px 80px #0005;border:1px solid #fff;text-align:center}.tutorial-panel h3{font-family:Georgia,"Times New Roman",serif;color:var(--green);font-size:clamp(2rem,6vw,3.3rem);margin:2px 0 8px}.tutorial-panel>p{margin:0 auto 18px;color:#526158;font-weight:750}.tutorial-demo{display:grid;grid-template-columns:1fr minmax(150px,1.35fr) 1fr;gap:12px;align-items:center;margin:18px 0}.tutorial-side{min-height:122px;border-radius:23px;display:grid;place-items:center;color:#fff;font-size:1.35rem;font-weight:1000;box-shadow:0 14px 30px #0002}.tutorial-side.yes{background:linear-gradient(145deg,var(--green3),var(--green))}.tutorial-side.no{background:linear-gradient(145deg,var(--red2),var(--red))}.tutorial-card{position:relative;min-height:145px;border-radius:25px;background:white;border:2px solid #e5ddc9;display:grid;place-items:center;padding:14px;box-shadow:0 18px 36px #173f2f20;animation:tutorialSwipe 3.8s ease-in-out infinite}.tutorial-card strong{font-family:Georgia,"Times New Roman",serif;color:var(--green);font-size:1.6rem}.tutorial-hand{position:absolute;font-size:2.4rem;right:8%;bottom:-16px;filter:drop-shadow(0 5px 5px #0003)}@keyframes tutorialSwipe{0%,12%,100%{transform:translateX(0) rotate(0)}36%{transform:translateX(-55%) rotate(-8deg)}48%{transform:translateX(0) rotate(0)}72%{transform:translateX(55%) rotate(8deg)}84%{transform:translateX(0) rotate(0)}}
+.tutorial-tips{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:8px 0 18px}.tutorial-tips span{background:#f1ead7;border-radius:999px;padding:8px 11px;font-size:.76rem;font-weight:850;color:#526158}.tutorial-start{min-width:240px}
+
+.new-record{display:none;margin:10px auto 2px;width:max-content;max-width:100%;padding:9px 16px;border-radius:999px;background:linear-gradient(135deg,#ffe069,#ffb53b);color:#6b3100;font-weight:1000;letter-spacing:.04em;box-shadow:0 12px 28px #b9630022}.new-record.show{display:block;animation:recordPop .65s cubic-bezier(.2,.9,.2,1)}@keyframes recordPop{0%{transform:scale(.65);opacity:0}70%{transform:scale(1.07)}100%{transform:scale(1);opacity:1}}
+.result-medal{filter:drop-shadow(0 12px 16px #0002)}.result-medal.celebrate{animation:medalBounce .8s cubic-bezier(.2,.85,.2,1)}@keyframes medalBounce{0%{transform:scale(.35) rotate(-18deg);opacity:0}65%{transform:scale(1.12) rotate(5deg)}100%{transform:scale(1) rotate(0);opacity:1}}
+.final-score strong.counting{animation:scoreGlow .45s ease-in-out infinite alternate}@keyframes scoreGlow{to{transform:scale(1.035);text-shadow:0 0 24px #ffd64f66}}
+.result-grid>div.reveal{animation:statReveal .5s both cubic-bezier(.2,.75,.2,1)}@keyframes statReveal{from{opacity:0;transform:translateY(12px) scale(.96)}to{opacity:1;transform:none}}
+.result-confetti span{position:absolute;left:50%;top:22%;width:9px;height:15px;border-radius:2px;opacity:0;pointer-events:none}.result-confetti.go span{animation:confettiFly 1.8s ease-out forwards}@keyframes confettiFly{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(var(--r))}}
+
+@media(max-width:760px){
+  .sound-toggle{width:42px;height:42px;right:10px;top:10px;font-size:1.05rem}
+  .fullscreen-toggle{width:42px;height:42px;right:60px;top:10px;font-size:1.08rem}
+  body.in-game .sound-toggle{top:auto;bottom:72px;right:10px;width:38px;height:38px;font-size:1rem;background:rgba(255,253,244,.88)}
+  body.in-game .fullscreen-toggle{top:auto;bottom:72px;left:10px;right:auto;width:38px;height:38px;font-size:1rem;background:rgba(255,253,244,.88)}
+  .game-topbar{padding-right:46px}
+  .ambient-decor span{opacity:.045}.screen-game::before{inset:-4px;border-radius:24px}
+  .time-track{height:7px}.term-card{box-shadow:0 24px 54px rgba(6,49,32,.24),0 5px 11px rgba(6,49,32,.08),inset 0 1px #fff}
+  .tutorial-overlay{inset:-4px;border-radius:25px;padding:8px}.tutorial-panel{padding:20px 12px;border-radius:24px}.tutorial-demo{grid-template-columns:1fr 1.2fr 1fr;gap:7px}.tutorial-side{min-height:95px;font-size:1rem}.tutorial-card{min-height:112px}.tutorial-card strong{font-size:1.2rem}.tutorial-hand{font-size:2rem}.tutorial-tips{gap:5px}.tutorial-tips span{font-size:.68rem;padding:6px 8px}
+  .urgent-countdown{top:46%}
+}
+@media(max-width:390px){.tutorial-demo{grid-template-columns:1fr 1.08fr 1fr}.tutorial-card strong{font-size:1rem}.tutorial-side{font-size:.9rem}.tutorial-start{min-width:0;width:100%}}
+
+</style>
+</head>
+<body>
+  <div class="ambient-decor" aria-hidden="true"><span>🧉</span><span>🌲</span><span>RS</span><span>★</span></div>
+  <button id="fullscreenToggle" class="fullscreen-toggle" type="button" aria-label="Ativar tela cheia" title="Tela cheia">⛶</button>
+  <button id="soundToggle" class="sound-toggle" type="button" aria-label="Desligar sons" title="Som ligado">🔊</button>
+  <main class="app-shell">
+    <section id="startScreen" class="screen screen-start active" aria-labelledby="gameTitle">
+      <div class="start-stripe" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="hero-mark" aria-hidden="true">
+        <span class="flag-band green"></span><span class="flag-band red"></span><span class="flag-band yellow"></span>
+        <span class="hero-badge">BAH?</span>
+      </div>
+      <p class="eyebrow">EXPEDIÇÃO GAÚCHA • DESAFIO RELÂMPAGO</p>
+      <h1 id="gameTitle">Bah ou Não Bah?</h1>
+      <p class="subtitle">Isso tem forte ligação com o Rio Grande do Sul?</p>
+
+      <div class="feature-row" aria-label="Resumo do jogo">
+        <span>🃏 <strong>500</strong> associações</span>
+        <span>⏱️ <strong>100</strong> segundos</span>
+        <span>🔥 bônus por sequência</span>
+      </div>
+
+      <div class="rules-card" aria-label="Como jogar">
+        <div class="rule rule-yes"><b class="rule-icon">✓</b><strong>SIM</strong><span>arraste para a esquerda</span></div>
+        <div class="rule rule-time"><b class="rule-icon">⚡</b><strong>Decida rápido</strong><span>cada acerto vale 100 pontos</span></div>
+        <div class="rule rule-no"><b class="rule-icon">×</b><strong>NÃO</strong><span>arraste para a direita</span></div>
+      </div>
+
+      <label class="name-field">
+        <span>Seu nome ou apelido</span>
+        <input id="playerName" maxlength="24" autocomplete="off" placeholder="Digite aqui" />
+      </label>
+
+      <div class="start-actions">
+        <button id="startBtn" class="primary-btn big-btn" type="button"><span>Começar a partida</span><b>→</b></button>
+        <button id="openRankingBtn" class="ghost-btn" type="button">🏆 Ranking online</button>
+      </div>
+      <p class="tiny-note">No celular, arraste o cartão ou toque em SIM/NÃO. No computador, use ← e →.</p>
+    </section>
+
+    <section id="gameScreen" class="screen screen-game" aria-label="Partida">
+      <header class="game-topbar">
+        <div class="player-pill"><span>Jogador</span><strong id="playerLabel">—</strong></div>
+        <div class="stat-pill time-pill"><span>⏱ Tempo</span><strong id="timeLabel">100,0</strong></div>
+        <div class="stat-pill score-pill"><span>⭐ Pontos</span><strong id="scoreLabel">0</strong></div>
+        <div class="stat-pill streak-pill"><span>Sequência</span><strong id="streakLabel">🔥 0</strong></div>
+      </header>
+
+      <div id="timeTrack" class="time-track" aria-hidden="true"><span id="timeBar"></span></div>
+      <div id="urgentCountdown" class="urgent-countdown" aria-hidden="true"></div>
+
+      <div class="question-wrap">
+        <span class="question-kicker">DECIDA: SIM OU NÃO?</span>
+        <p class="question-fixed">Isso tem forte ligação com o Rio Grande do Sul?</p>
+        <div class="progress-line"><span id="answeredLabel">0 respondidas</span><span id="accuracyLabel">0% acertos</span></div>
+      </div>
+
+      <div class="play-area" id="playArea">
+        <button id="yesZone" class="choice-zone choice-yes" type="button" aria-label="Responder sim">
+          <span class="choice-symbol">✓</span>
+          <strong>SIM</strong>
+          <small>tem forte ligação com o RS</small>
+          <span class="choice-arrow">← arraste</span>
+          <span class="drop-label">SOLTE AQUI</span>
+        </button>
+
+        <div class="card-stage" id="cardStage">
+          <article id="termCard" class="term-card" tabindex="0" aria-live="polite">
+            <div class="card-shine"></div>
+            <span class="swipe-stamp stamp-yes">✓ SIM</span>
+            <span class="swipe-stamp stamp-no">NÃO ×</span>
+            <span class="card-kicker">ASSOCIAÇÃO</span>
+            <span class="difficulty-dot" id="difficultyDot" aria-hidden="true"></span>
+            <p id="termText">Preparando...</p>
+            <span class="drag-hint"><b>↔</b> arraste o cartão</span>
+          </article>
+          <div id="feedback" class="feedback" aria-live="assertive"></div>
+          <div id="scoreBurst" class="score-burst" aria-hidden="true">+100</div>
+          <div id="comboBurst" class="combo-burst" aria-hidden="true"></div>
+          <div id="recordBurst" class="record-burst" aria-hidden="true">🏆 NOVO RECORDE!</div>
+        </div>
+
+        <button id="noZone" class="choice-zone choice-no" type="button" aria-label="Responder não">
+          <span class="choice-symbol">×</span>
+          <strong>NÃO</strong>
+          <small>não tem ligação principal com o RS</small>
+          <span class="choice-arrow">arraste →</span>
+          <span class="drop-label">SOLTE AQUI</span>
+        </button>
+      </div>
+
+      <div class="mobile-actions">
+        <button id="mobileYes" class="mobile-choice yes" type="button"><span>✓</span><b>SIM</b><small>← esquerda</small></button>
+        <button id="mobileNo" class="mobile-choice no" type="button"><span>×</span><b>NÃO</b><small>direita →</small></button>
+      </div>
+
+      <div id="tutorialOverlay" class="tutorial-overlay" aria-hidden="true">
+        <div class="tutorial-panel">
+          <p class="eyebrow">COMO JOGAR</p>
+          <h3>Arraste e decida!</h3>
+          <p>Leve cada cartão para o lado certo. O relógio só começa depois que você apertar o botão abaixo.</p>
+          <div class="tutorial-demo" aria-hidden="true">
+            <div class="tutorial-side yes">✓ SIM</div>
+            <div class="tutorial-card"><strong>Exemplo</strong><span class="tutorial-hand">☝️</span></div>
+            <div class="tutorial-side no">NÃO ×</div>
+          </div>
+          <div class="tutorial-tips"><span>⬅️ SIM à esquerda</span><span>➡️ NÃO à direita</span><span>🔥 sequência dá bônus</span></div>
+          <button id="tutorialStartBtn" class="primary-btn big-btn tutorial-start" type="button"><span>Entendi, jogar!</span><b>⚡</b></button>
+        </div>
+      </div>
+
+      <div id="countdownOverlay" class="countdown-overlay" aria-live="assertive" aria-hidden="true">
+        <div class="countdown-ring"><strong id="countdownText">3</strong><span>Prepare-se!</span></div>
+      </div>
+      <div id="screenFlash" class="screen-flash" aria-hidden="true"></div>
+    </section>
+
+    <section id="resultScreen" class="screen screen-result" aria-labelledby="resultTitle">
+      <div class="result-confetti" aria-hidden="true"></div>
+      <div class="result-medal" id="resultMedal">🏆</div>
+      <p class="eyebrow">FIM DA PARTIDA</p>
+      <h2 id="resultTitle">Resultado</h2>
+      <p id="resultClass" class="result-class">—</p>
+      <div id="newRecordBadge" class="new-record">🏆 NOVO RECORDE DO DIA!</div>
+      <div class="final-score"><span>⭐ Pontuação final</span><strong id="finalScore">0</strong></div>
+
+      <div class="result-grid">
+        <div><span>✅ Acertos</span><strong id="finalCorrect">0</strong></div>
+        <div><span>❌ Erros</span><strong id="finalWrong">0</strong></div>
+        <div><span>🎯 Aproveitamento</span><strong id="finalAccuracy">0%</strong></div>
+        <div><span>🔥 Melhor sequência</span><strong id="finalStreak">0</strong></div>
+        <div><span>🃏 Respondidas</span><strong id="finalAnswered">0</strong></div>
+        <div><span>🎁 Bônus</span><strong id="finalBonus">0</strong></div>
+      </div>
+
+      <div id="resultInsight" class="result-insight">—</div>
+
+      <div class="result-actions">
+        <button id="nextPlayerBtn" class="primary-btn next-player-btn" type="button">👤 Próximo jogador</button>
+        <button id="playAgainBtn" class="ghost-btn" type="button">↻ Jogar novamente</button>
+        <button id="resultRankingBtn" class="ghost-btn" type="button">🏆 Ranking online</button>
+        <button id="backHomeBtn" class="link-btn" type="button">Voltar ao início</button>
+      </div>
+      <p id="autoResetText" class="auto-reset-note">🎪 Modo Feira: voltando ao início em 30 s</p>
+    </section>
+  </main>
+
+  <dialog id="rankingDialog" class="ranking-dialog">
+    <div class="ranking-head">
+      <div><p class="eyebrow">PLACAR LOCAL</p><h2>Ranking de hoje</h2></div>
+      <button id="closeRankingBtn" class="close-btn" type="button" aria-label="Fechar">×</button>
+    </div>
+    <p class="ranking-note">Melhor resultado de cada nome neste dispositivo.</p>
+    <div id="rankingList" class="ranking-list"></div>
+    <button id="clearRankingBtn" class="danger-link" type="button">Limpar ranking deste dispositivo</button>
+  </dialog>
+
+  <script src="../assets/online.js"></script>
+<script>
+window.BAH_BANK = {"nome": "Bah ou Não Bah?", "versao": "2.0", "pergunta": "Isso tem forte ligação com o Rio Grande do Sul?", "instrucao": "Arraste para SIM quando o item tiver forte ligação com o Rio Grande do Sul; arraste para NÃO quando a ligação principal for com outro lugar.", "total": 500, "sim": 250, "nao": 250, "itens": [{"id": 1, "termo": "Porto Alegre", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Porto Alegre é um município do Rio Grande do Sul."}, {"id": 2, "termo": "Caxias do Sul", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Caxias do Sul é um município do Rio Grande do Sul."}, {"id": 3, "termo": "Pelotas", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Pelotas é um município do Rio Grande do Sul."}, {"id": 4, "termo": "Canoas", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Canoas é um município do Rio Grande do Sul."}, {"id": 5, "termo": "Santa Maria", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Santa Maria é um município do Rio Grande do Sul."}, {"id": 6, "termo": "Gravataí", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Gravataí é um município do Rio Grande do Sul."}, {"id": 7, "termo": "Viamão", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Viamão é um município do Rio Grande do Sul."}, {"id": 8, "termo": "Novo Hamburgo", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Novo Hamburgo é um município do Rio Grande do Sul."}, {"id": 9, "termo": "São Leopoldo", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "São Leopoldo é um município do Rio Grande do Sul."}, {"id": 10, "termo": "Rio Grande", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Rio Grande é um município do Rio Grande do Sul."}, {"id": 11, "termo": "Alvorada", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Alvorada é um município do Rio Grande do Sul."}, {"id": 12, "termo": "Passo Fundo", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Passo Fundo é um município do Rio Grande do Sul."}, {"id": 13, "termo": "Sapucaia do Sul", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Sapucaia do Sul é um município do Rio Grande do Sul."}, {"id": 14, "termo": "Uruguaiana", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Uruguaiana é um município do Rio Grande do Sul."}, {"id": 15, "termo": "Santa Cruz do Sul", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Santa Cruz do Sul é um município do Rio Grande do Sul."}, {"id": 16, "termo": "Cachoeirinha", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Cachoeirinha é um município do Rio Grande do Sul."}, {"id": 17, "termo": "Bagé", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Bagé é um município do Rio Grande do Sul."}, {"id": 18, "termo": "Bento Gonçalves", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Bento Gonçalves é um município do Rio Grande do Sul."}, {"id": 19, "termo": "Erechim", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Erechim é um município do Rio Grande do Sul."}, {"id": 20, "termo": "Guaíba", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Guaíba é um município do Rio Grande do Sul."}, {"id": 21, "termo": "Lajeado", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Lajeado é um município do Rio Grande do Sul."}, {"id": 22, "termo": "Ijuí", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Ijuí é um município do Rio Grande do Sul."}, {"id": 23, "termo": "Sapiranga", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Sapiranga é um município do Rio Grande do Sul."}, {"id": 24, "termo": "Cachoeira do Sul", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Cachoeira do Sul é um município do Rio Grande do Sul."}, {"id": 25, "termo": "Santana do Livramento", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Santana do Livramento é um município do Rio Grande do Sul."}, {"id": 26, "termo": "Santo Ângelo", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Santo Ângelo é um município do Rio Grande do Sul."}, {"id": 27, "termo": "Alegrete", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Alegrete é um município do Rio Grande do Sul."}, {"id": 28, "termo": "Venâncio Aires", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Venâncio Aires é um município do Rio Grande do Sul."}, {"id": 29, "termo": "Farroupilha", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Farroupilha é um município do Rio Grande do Sul."}, {"id": 30, "termo": "Montenegro", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Montenegro é um município do Rio Grande do Sul."}, {"id": 31, "termo": "Vacaria", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Vacaria é um município do Rio Grande do Sul."}, {"id": 32, "termo": "Campo Bom", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Campo Bom é um município do Rio Grande do Sul."}, {"id": 33, "termo": "Carazinho", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Carazinho é um município do Rio Grande do Sul."}, {"id": 34, "termo": "Camaquã", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Camaquã é um município do Rio Grande do Sul."}, {"id": 35, "termo": "São Borja", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "São Borja é um município do Rio Grande do Sul."}, {"id": 36, "termo": "Gramado", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Gramado é um município do Rio Grande do Sul."}, {"id": 37, "termo": "Canela", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Canela é um município do Rio Grande do Sul."}, {"id": 38, "termo": "Torres", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Torres é um município do Rio Grande do Sul."}, {"id": 39, "termo": "Tramandaí", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Tramandaí é um município do Rio Grande do Sul."}, {"id": 40, "termo": "Osório", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Osório é um município do Rio Grande do Sul."}, {"id": 41, "termo": "Capão da Canoa", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Capão da Canoa é um município do Rio Grande do Sul."}, {"id": 42, "termo": "Nova Petrópolis", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Nova Petrópolis é um município do Rio Grande do Sul."}, {"id": 43, "termo": "Garibaldi", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Garibaldi é um município do Rio Grande do Sul."}, {"id": 44, "termo": "Piratini", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Piratini é um município do Rio Grande do Sul."}, {"id": 45, "termo": "São Miguel das Missões", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "São Miguel das Missões é um município do Rio Grande do Sul."}, {"id": 46, "termo": "Chuí", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Chuí é um município do Rio Grande do Sul."}, {"id": 47, "termo": "Jaguarão", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Jaguarão é um município do Rio Grande do Sul."}, {"id": 48, "termo": "Soledade", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Soledade é um município do Rio Grande do Sul."}, {"id": 49, "termo": "Encantado", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Encantado é um município do Rio Grande do Sul."}, {"id": 50, "termo": "Santa Rosa", "resposta": "SIM", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Santa Rosa é um município do Rio Grande do Sul."}, {"id": 51, "termo": "Rio de Janeiro", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Rio de Janeiro fica em Rio de Janeiro, portanto não é um município do Rio Grande do Sul."}, {"id": 52, "termo": "São Paulo", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "São Paulo fica em São Paulo, portanto não é um município do Rio Grande do Sul."}, {"id": 53, "termo": "Salvador", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Salvador fica em Bahia, portanto não é um município do Rio Grande do Sul."}, {"id": 54, "termo": "Recife", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Recife fica em Pernambuco, portanto não é um município do Rio Grande do Sul."}, {"id": 55, "termo": "Fortaleza", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Fortaleza fica em Ceará, portanto não é um município do Rio Grande do Sul."}, {"id": 56, "termo": "Belo Horizonte", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Belo Horizonte fica em Minas Gerais, portanto não é um município do Rio Grande do Sul."}, {"id": 57, "termo": "Curitiba", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Curitiba fica em Paraná, portanto não é um município do Rio Grande do Sul."}, {"id": 58, "termo": "Florianópolis", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Florianópolis fica em Santa Catarina, portanto não é um município do Rio Grande do Sul."}, {"id": 59, "termo": "Manaus", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Manaus fica em Amazonas, portanto não é um município do Rio Grande do Sul."}, {"id": 60, "termo": "Belém", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Belém fica em Pará, portanto não é um município do Rio Grande do Sul."}, {"id": 61, "termo": "Goiânia", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Goiânia fica em Goiás, portanto não é um município do Rio Grande do Sul."}, {"id": 62, "termo": "Brasília", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Brasília fica em Distrito Federal, portanto não é um município do Rio Grande do Sul."}, {"id": 63, "termo": "Vitória", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Vitória fica em Espírito Santo, portanto não é um município do Rio Grande do Sul."}, {"id": 64, "termo": "Natal", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Natal fica em Rio Grande do Norte, portanto não é um município do Rio Grande do Sul."}, {"id": 65, "termo": "João Pessoa", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "João Pessoa fica em Paraíba, portanto não é um município do Rio Grande do Sul."}, {"id": 66, "termo": "Maceió", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Maceió fica em Alagoas, portanto não é um município do Rio Grande do Sul."}, {"id": 67, "termo": "Aracaju", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Aracaju fica em Sergipe, portanto não é um município do Rio Grande do Sul."}, {"id": 68, "termo": "São Luís", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "São Luís fica em Maranhão, portanto não é um município do Rio Grande do Sul."}, {"id": 69, "termo": "Teresina", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Teresina fica em Piauí, portanto não é um município do Rio Grande do Sul."}, {"id": 70, "termo": "Cuiabá", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Cuiabá fica em Mato Grosso, portanto não é um município do Rio Grande do Sul."}, {"id": 71, "termo": "Campo Grande", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Campo Grande fica em Mato Grosso do Sul, portanto não é um município do Rio Grande do Sul."}, {"id": 72, "termo": "Porto Velho", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Porto Velho fica em Rondônia, portanto não é um município do Rio Grande do Sul."}, {"id": 73, "termo": "Rio Branco", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Rio Branco fica em Acre, portanto não é um município do Rio Grande do Sul."}, {"id": 74, "termo": "Boa Vista", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Boa Vista fica em Roraima, portanto não é um município do Rio Grande do Sul."}, {"id": 75, "termo": "Macapá", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Fácil", "explicacao": "Macapá fica em Amapá, portanto não é um município do Rio Grande do Sul."}, {"id": 76, "termo": "Palmas", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Palmas fica em Tocantins, portanto não é um município do Rio Grande do Sul."}, {"id": 77, "termo": "Campinas", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Campinas fica em São Paulo, portanto não é um município do Rio Grande do Sul."}, {"id": 78, "termo": "Santos", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Santos fica em São Paulo, portanto não é um município do Rio Grande do Sul."}, {"id": 79, "termo": "Ribeirão Preto", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Ribeirão Preto fica em São Paulo, portanto não é um município do Rio Grande do Sul."}, {"id": 80, "termo": "Sorocaba", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Sorocaba fica em São Paulo, portanto não é um município do Rio Grande do Sul."}, {"id": 81, "termo": "Niterói", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Niterói fica em Rio de Janeiro, portanto não é um município do Rio Grande do Sul."}, {"id": 82, "termo": "Petrópolis", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Petrópolis fica em Rio de Janeiro, portanto não é um município do Rio Grande do Sul."}, {"id": 83, "termo": "Búzios", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Búzios fica em Rio de Janeiro, portanto não é um município do Rio Grande do Sul."}, {"id": 84, "termo": "Ouro Preto", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Ouro Preto fica em Minas Gerais, portanto não é um município do Rio Grande do Sul."}, {"id": 85, "termo": "Uberlândia", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Uberlândia fica em Minas Gerais, portanto não é um município do Rio Grande do Sul."}, {"id": 86, "termo": "Foz do Iguaçu", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Foz do Iguaçu fica em Paraná, portanto não é um município do Rio Grande do Sul."}, {"id": 87, "termo": "Londrina", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Londrina fica em Paraná, portanto não é um município do Rio Grande do Sul."}, {"id": 88, "termo": "Maringá", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Maringá fica em Paraná, portanto não é um município do Rio Grande do Sul."}, {"id": 89, "termo": "Joinville", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Joinville fica em Santa Catarina, portanto não é um município do Rio Grande do Sul."}, {"id": 90, "termo": "Blumenau", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Média", "explicacao": "Blumenau fica em Santa Catarina, portanto não é um município do Rio Grande do Sul."}, {"id": 91, "termo": "Balneário Camboriú", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Balneário Camboriú fica em Santa Catarina, portanto não é um município do Rio Grande do Sul."}, {"id": 92, "termo": "Chapecó", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Chapecó fica em Santa Catarina, portanto não é um município do Rio Grande do Sul."}, {"id": 93, "termo": "Olinda", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Olinda fica em Pernambuco, portanto não é um município do Rio Grande do Sul."}, {"id": 94, "termo": "Caruaru", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Caruaru fica em Pernambuco, portanto não é um município do Rio Grande do Sul."}, {"id": 95, "termo": "Feira de Santana", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Feira de Santana fica em Bahia, portanto não é um município do Rio Grande do Sul."}, {"id": 96, "termo": "Ilhéus", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Ilhéus fica em Bahia, portanto não é um município do Rio Grande do Sul."}, {"id": 97, "termo": "Juazeiro do Norte", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Juazeiro do Norte fica em Ceará, portanto não é um município do Rio Grande do Sul."}, {"id": 98, "termo": "Parintins", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Parintins fica em Amazonas, portanto não é um município do Rio Grande do Sul."}, {"id": 99, "termo": "Bonito", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Bonito fica em Mato Grosso do Sul, portanto não é um município do Rio Grande do Sul."}, {"id": 100, "termo": "Caldas Novas", "resposta": "NÃO", "categoria": "Cidades e municípios", "dificuldade": "Difícil", "explicacao": "Caldas Novas fica em Goiás, portanto não é um município do Rio Grande do Sul."}, {"id": 101, "termo": "Lago Negro", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Lago Negro é uma atração ou referência turística de Gramado, no Rio Grande do Sul."}, {"id": 102, "termo": "Rua Coberta", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Rua Coberta é uma atração ou referência turística de Gramado, no Rio Grande do Sul."}, {"id": 103, "termo": "Mini Mundo", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Mini Mundo é uma atração ou referência turística de Gramado, no Rio Grande do Sul."}, {"id": 104, "termo": "Snowland", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Snowland é uma atração ou referência turística de Gramado, no Rio Grande do Sul."}, {"id": 105, "termo": "Catedral de Pedra", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Catedral de Pedra é uma atração ou referência turística de Canela, no Rio Grande do Sul."}, {"id": 106, "termo": "Cascata do Caracol", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Cascata do Caracol é uma atração ou referência turística de Canela, no Rio Grande do Sul."}, {"id": 107, "termo": "Parque do Caracol", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Parque do Caracol é uma atração ou referência turística de Canela, no Rio Grande do Sul."}, {"id": 108, "termo": "Vale dos Vinhedos", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Vale dos Vinhedos é uma atração ou referência turística de Serra Gaúcha, no Rio Grande do Sul."}, {"id": 109, "termo": "Caminhos de Pedra", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Caminhos de Pedra é uma atração ou referência turística de Bento Gonçalves, no Rio Grande do Sul."}, {"id": 110, "termo": "Maria Fumaça da Serra Gaúcha", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Maria Fumaça da Serra Gaúcha é uma atração ou referência turística de Bento Gonçalves e região, no Rio Grande do Sul."}, {"id": 111, "termo": "Cristo Protetor de Encantado", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Cristo Protetor de Encantado é uma atração ou referência turística de Encantado, no Rio Grande do Sul."}, {"id": 112, "termo": "Labirinto Verde", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Labirinto Verde é uma atração ou referência turística de Nova Petrópolis, no Rio Grande do Sul."}, {"id": 113, "termo": "Praça das Flores", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Praça das Flores é uma atração ou referência turística de Nova Petrópolis, no Rio Grande do Sul."}, {"id": 114, "termo": "Parque Aldeia do Imigrante", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Parque Aldeia do Imigrante é uma atração ou referência turística de Nova Petrópolis, no Rio Grande do Sul."}, {"id": 115, "termo": "Igreja de São Pelegrino", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Igreja de São Pelegrino é uma atração ou referência turística de Caxias do Sul, no Rio Grande do Sul."}, {"id": 116, "termo": "Santuário de Caravaggio", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Santuário de Caravaggio é uma atração ou referência turística de Farroupilha, no Rio Grande do Sul."}, {"id": 117, "termo": "Sítio Arqueológico de São Miguel Arcanjo", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Sítio Arqueológico de São Miguel Arcanjo é uma atração ou referência turística de São Miguel das Missões, no Rio Grande do Sul."}, {"id": 118, "termo": "Museu das Missões", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Museu das Missões é uma atração ou referência turística de São Miguel das Missões, no Rio Grande do Sul."}, {"id": 119, "termo": "Ruínas de São Miguel das Missões", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Ruínas de São Miguel das Missões é uma atração ou referência turística de São Miguel das Missões, no Rio Grande do Sul."}, {"id": 120, "termo": "Parque Nacional de Aparados da Serra", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Parque Nacional de Aparados da Serra é uma atração ou referência turística de Cambará do Sul e região, no Rio Grande do Sul."}, {"id": 121, "termo": "Cânion Itaimbezinho", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Cânion Itaimbezinho é uma atração ou referência turística de Cambará do Sul, no Rio Grande do Sul."}, {"id": 122, "termo": "Cânion Fortaleza", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Cânion Fortaleza é uma atração ou referência turística de Cambará do Sul, no Rio Grande do Sul."}, {"id": 123, "termo": "Parque da Guarita", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Parque da Guarita é uma atração ou referência turística de Torres, no Rio Grande do Sul."}, {"id": 124, "termo": "Praia da Guarita", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Praia da Guarita é uma atração ou referência turística de Torres, no Rio Grande do Sul."}, {"id": 125, "termo": "Praia do Cassino", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Praia do Cassino é uma atração ou referência turística de Rio Grande, no Rio Grande do Sul."}, {"id": 126, "termo": "Molhes da Barra", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Molhes da Barra é uma atração ou referência turística de Rio Grande, no Rio Grande do Sul."}, {"id": 127, "termo": "Mercado Público de Porto Alegre", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Mercado Público de Porto Alegre é uma atração ou referência turística de Porto Alegre, no Rio Grande do Sul."}, {"id": 128, "termo": "Usina do Gasômetro", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Usina do Gasômetro é uma atração ou referência turística de Porto Alegre, no Rio Grande do Sul."}, {"id": 129, "termo": "Orla do Guaíba", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Orla do Guaíba é uma atração ou referência turística de Porto Alegre, no Rio Grande do Sul."}, {"id": 130, "termo": "Parque Farroupilha (Redenção)", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Parque Farroupilha (Redenção) é uma atração ou referência turística de Porto Alegre, no Rio Grande do Sul."}, {"id": 131, "termo": "Casa de Cultura Mário Quintana", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Casa de Cultura Mário Quintana é uma atração ou referência turística de Porto Alegre, no Rio Grande do Sul."}, {"id": 132, "termo": "MARGS", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "MARGS é uma atração ou referência turística de Porto Alegre, no Rio Grande do Sul."}, {"id": 133, "termo": "Fundação Iberê Camargo", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Fundação Iberê Camargo é uma atração ou referência turística de Porto Alegre, no Rio Grande do Sul."}, {"id": 134, "termo": "Museu de Ciências e Tecnologia da PUCRS", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Museu de Ciências e Tecnologia da PUCRS é uma atração ou referência turística de Porto Alegre, no Rio Grande do Sul."}, {"id": 135, "termo": "Parque Estadual do Tainhas", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Parque Estadual do Tainhas é uma atração ou referência turística de Cambará do Sul, no Rio Grande do Sul."}, {"id": 136, "termo": "Salto do Yucumã", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Salto do Yucumã é uma atração ou referência turística de Derrubadas, no Rio Grande do Sul."}, {"id": 137, "termo": "Rota Romântica", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Rota Romântica é uma atração ou referência turística de Serra Gaúcha, no Rio Grande do Sul."}, {"id": 138, "termo": "Parque Histórico General Bento Gonçalves", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Parque Histórico General Bento Gonçalves é uma atração ou referência turística de Cristal, no Rio Grande do Sul."}, {"id": 139, "termo": "Museu do Doce", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Museu do Doce é uma atração ou referência turística de Pelotas, no Rio Grande do Sul."}, {"id": 140, "termo": "Charqueada Boa Vista", "resposta": "SIM", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Charqueada Boa Vista é uma atração ou referência turística de Pelotas, no Rio Grande do Sul."}, {"id": 141, "termo": "Cristo Redentor", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Cristo Redentor fica em Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 142, "termo": "Pão de Açúcar", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Pão de Açúcar fica em Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 143, "termo": "Maracanã", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Maracanã fica em Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 144, "termo": "Museu do Amanhã", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Museu do Amanhã fica em Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 145, "termo": "Pelourinho", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Pelourinho fica em Bahia, fora do Rio Grande do Sul."}, {"id": 146, "termo": "Elevador Lacerda", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Elevador Lacerda fica em Bahia, fora do Rio Grande do Sul."}, {"id": 147, "termo": "Farol da Barra", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Farol da Barra fica em Bahia, fora do Rio Grande do Sul."}, {"id": 148, "termo": "Igreja do Bonfim", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Igreja do Bonfim fica em Bahia, fora do Rio Grande do Sul."}, {"id": 149, "termo": "Lençóis Maranhenses", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Lençóis Maranhenses fica em Maranhão, fora do Rio Grande do Sul."}, {"id": 150, "termo": "Jalapão", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Jalapão fica em Tocantins, fora do Rio Grande do Sul."}, {"id": 151, "termo": "Chapada Diamantina", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Chapada Diamantina fica em Bahia, fora do Rio Grande do Sul."}, {"id": 152, "termo": "Chapada dos Veadeiros", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Chapada dos Veadeiros fica em Goiás, fora do Rio Grande do Sul."}, {"id": 153, "termo": "Gruta do Lago Azul", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Gruta do Lago Azul fica em Bonito, Mato Grosso do Sul, fora do Rio Grande do Sul."}, {"id": 154, "termo": "Pantanal", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Pantanal fica em Mato Grosso e Mato Grosso do Sul, fora do Rio Grande do Sul."}, {"id": 155, "termo": "Cataratas do Iguaçu", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Cataratas do Iguaçu fica em Paraná, fora do Rio Grande do Sul."}, {"id": 156, "termo": "Jardim Botânico de Curitiba", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Jardim Botânico de Curitiba fica em Paraná, fora do Rio Grande do Sul."}, {"id": 157, "termo": "Beto Carrero World", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Beto Carrero World fica em Santa Catarina, fora do Rio Grande do Sul."}, {"id": 158, "termo": "Praia de Bombinhas", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Praia de Bombinhas fica em Santa Catarina, fora do Rio Grande do Sul."}, {"id": 159, "termo": "Ponte Hercílio Luz", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Ponte Hercílio Luz fica em Santa Catarina, fora do Rio Grande do Sul."}, {"id": 160, "termo": "Vila Germânica", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Vila Germânica fica em Santa Catarina, fora do Rio Grande do Sul."}, {"id": 161, "termo": "Inhotim", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Inhotim fica em Minas Gerais, fora do Rio Grande do Sul."}, {"id": 162, "termo": "Praça da Liberdade", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Praça da Liberdade fica em Minas Gerais, fora do Rio Grande do Sul."}, {"id": 163, "termo": "Igreja de São Francisco de Assis de Ouro Preto", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Igreja de São Francisco de Assis de Ouro Preto fica em Minas Gerais, fora do Rio Grande do Sul."}, {"id": 164, "termo": "Serra do Cipó", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Serra do Cipó fica em Minas Gerais, fora do Rio Grande do Sul."}, {"id": 165, "termo": "MASP", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "MASP fica em São Paulo, fora do Rio Grande do Sul."}, {"id": 166, "termo": "Parque Ibirapuera", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Parque Ibirapuera fica em São Paulo, fora do Rio Grande do Sul."}, {"id": 167, "termo": "Avenida Paulista", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Avenida Paulista fica em São Paulo, fora do Rio Grande do Sul."}, {"id": 168, "termo": "Museu do Ipiranga", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Museu do Ipiranga fica em São Paulo, fora do Rio Grande do Sul."}, {"id": 169, "termo": "Marco das Três Fronteiras", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Marco das Três Fronteiras fica em Paraná, fora do Rio Grande do Sul."}, {"id": 170, "termo": "Porto de Galinhas", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Média", "explicacao": "Porto de Galinhas fica em Pernambuco, fora do Rio Grande do Sul."}, {"id": 171, "termo": "Instituto Ricardo Brennand", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Instituto Ricardo Brennand fica em Pernambuco, fora do Rio Grande do Sul."}, {"id": 172, "termo": "Praia de Pipa", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Praia de Pipa fica em Rio Grande do Norte, fora do Rio Grande do Sul."}, {"id": 173, "termo": "Dunas de Genipabu", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Dunas de Genipabu fica em Rio Grande do Norte, fora do Rio Grande do Sul."}, {"id": 174, "termo": "Teatro Amazonas", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Fácil", "explicacao": "Teatro Amazonas fica em Amazonas, fora do Rio Grande do Sul."}, {"id": 175, "termo": "Encontro das Águas", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Encontro das Águas fica em Amazonas, fora do Rio Grande do Sul."}, {"id": 176, "termo": "Alter do Chão", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Alter do Chão fica em Pará, fora do Rio Grande do Sul."}, {"id": 177, "termo": "Basílica de Aparecida", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Basílica de Aparecida fica em São Paulo, fora do Rio Grande do Sul."}, {"id": 178, "termo": "Hot Park", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Hot Park fica em Goiás, fora do Rio Grande do Sul."}, {"id": 179, "termo": "Praia do Futuro", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Praia do Futuro fica em Ceará, fora do Rio Grande do Sul."}, {"id": 180, "termo": "Jericoacoara", "resposta": "NÃO", "categoria": "Turismo e lugares", "dificuldade": "Difícil", "explicacao": "Jericoacoara fica em Ceará, fora do Rio Grande do Sul."}, {"id": 181, "termo": "Chimarrão", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O chimarrão é uma bebida tradicional muito ligada à cultura gaúcha."}, {"id": 182, "termo": "Bombacha", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "A bombacha é uma peça tradicional da pilcha gaúcha."}, {"id": 183, "termo": "Pilcha", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "Pilcha é o nome dado ao traje tradicional gaúcho."}, {"id": 184, "termo": "CTG", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "CTG significa Centro de Tradições Gaúchas, espaço dedicado à cultura tradicionalista."}, {"id": 185, "termo": "Semana Farroupilha", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "A Semana Farroupilha celebra tradições e acontecimentos históricos ligados ao Rio Grande do Sul."}, {"id": 186, "termo": "Acampamento Farroupilha", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O Acampamento Farroupilha reúne atividades ligadas à cultura e às tradições gaúchas."}, {"id": 187, "termo": "Movimento Tradicionalista Gaúcho", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O Movimento Tradicionalista Gaúcho organiza e preserva práticas do tradicionalismo no Rio Grande do Sul."}, {"id": 188, "termo": "ENART", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O ENART é um grande encontro de artes e tradição gaúcha realizado no Rio Grande do Sul."}, {"id": 189, "termo": "Tertúlia Nativista", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "A Tertúlia Nativista é um festival de música nativista ligado a Santa Maria, no Rio Grande do Sul."}, {"id": 190, "termo": "Califórnia da Canção Nativa", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "A Califórnia da Canção Nativa é um tradicional festival nativista de Uruguaiana, no Rio Grande do Sul."}, {"id": 191, "termo": "Prenda tradicionalista", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "No tradicionalismo gaúcho, 'prenda' é a denominação tradicional da participante feminina."}, {"id": 192, "termo": "Peão tradicionalista", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "O peão tradicionalista é uma figura presente em CTGs e atividades da cultura gaúcha."}, {"id": 193, "termo": "Mateada", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "Mateada é um encontro social em torno do chimarrão, muito presente na cultura gaúcha."}, {"id": 194, "termo": "Rodeio crioulo", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "Rodeios crioulos reúnem provas campeiras e manifestações tradicionalistas muito presentes no Rio Grande do Sul."}, {"id": 195, "termo": "Tiro de laço", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "O tiro de laço é uma prova campeira comum em rodeios crioulos gaúchos."}, {"id": 196, "termo": "Dança da chula", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A chula é uma dança tradicional presente nas competições e apresentações do tradicionalismo gaúcho."}, {"id": 197, "termo": "Vaneira", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A vaneira é um ritmo muito presente nos bailes e nas danças gaúchas."}, {"id": 198, "termo": "Vanerão", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "O vanerão é uma variação mais acelerada de ritmo muito presente nos bailes gaúchos."}, {"id": 199, "termo": "Milonga gaúcha", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A milonga tem forte presença na música do Pampa e no repertório nativista gaúcho."}, {"id": 200, "termo": "Ritmo bugio", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "O bugio é um ritmo reconhecido dentro do repertório das danças e músicas gaúchas."}, {"id": 201, "termo": "Galpão crioulo", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "Galpão crioulo é um espaço associado à convivência e às atividades tradicionalistas gaúchas."}, {"id": 202, "termo": "Lenço farroupilha", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "O lenço farroupilha é um acessório muito usado na indumentária tradicionalista gaúcha."}, {"id": 203, "termo": "Hino Rio-Grandense", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O Hino Rio-Grandense é um dos símbolos oficiais do estado."}, {"id": 204, "termo": "Bandeira do Rio Grande do Sul", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "A bandeira do Rio Grande do Sul é um dos símbolos oficiais do estado."}, {"id": 205, "termo": "Brasão do Rio Grande do Sul", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O brasão do Rio Grande do Sul é um dos símbolos oficiais do estado."}, {"id": 206, "termo": "Liberdade, Igualdade, Humanidade", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Difícil", "explicacao": "'Liberdade, Igualdade, Humanidade' é o lema presente no brasão do Rio Grande do Sul."}, {"id": 207, "termo": "Fandango gaúcho", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "O fandango gaúcho é uma forma de baile e dança ligada ao tradicionalismo do estado."}, {"id": 208, "termo": "Música nativista gaúcha", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "A música nativista gaúcha valoriza temas, paisagens e costumes do Rio Grande do Sul."}, {"id": 209, "termo": "Trova gaúcha", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A trova gaúcha é uma manifestação oral e musical presente na cultura tradicionalista do estado."}, {"id": 210, "termo": "Cultura pampeana gaúcha", "resposta": "SIM", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "A cultura pampeana gaúcha reúne costumes ligados ao Pampa e à vida campeira do Rio Grande do Sul."}, {"id": 211, "termo": "Frevo", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O frevo é uma manifestação cultural fortemente ligada a Pernambuco."}, {"id": 212, "termo": "Maracatu", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O maracatu é uma manifestação cultural fortemente ligada a Pernambuco."}, {"id": 213, "termo": "Bumba meu boi", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O bumba meu boi tem forte tradição no Maranhão e em outros estados do Norte e Nordeste."}, {"id": 214, "termo": "Carimbó", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O carimbó é uma manifestação cultural especialmente ligada ao Pará."}, {"id": 215, "termo": "Festa do Divino de Pirenópolis", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A Festa do Divino de Pirenópolis é uma tradição marcante de Goiás."}, {"id": 216, "termo": "Congada mineira", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A congada mineira é uma manifestação tradicional muito ligada a Minas Gerais."}, {"id": 217, "termo": "Festa do Senhor do Bonfim", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A Festa do Senhor do Bonfim é uma tradição fortemente ligada à Bahia."}, {"id": 218, "termo": "Círio de Nazaré", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O Círio de Nazaré é uma grande manifestação religiosa e cultural de Belém, no Pará."}, {"id": 219, "termo": "Festival de Parintins", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O Festival de Parintins é uma grande manifestação cultural do Amazonas."}, {"id": 220, "termo": "Boi-bumbá de Parintins", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "Os bois-bumbás de Parintins são símbolos do festival realizado no Amazonas."}, {"id": 221, "termo": "Carnaval de Olinda", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O Carnaval de Olinda é uma tradição fortemente ligada a Pernambuco."}, {"id": 222, "termo": "Carnaval de Salvador", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O Carnaval de Salvador é uma tradição fortemente ligada à Bahia."}, {"id": 223, "termo": "Lavagem do Bonfim", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A Lavagem do Bonfim é uma manifestação cultural e religiosa de Salvador, na Bahia."}, {"id": 224, "termo": "Samba de roda do Recôncavo", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Difícil", "explicacao": "O samba de roda do Recôncavo é uma tradição cultural da Bahia."}, {"id": 225, "termo": "Capoeira angola", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A capoeira angola tem forte ligação histórica e cultural com a Bahia."}, {"id": 226, "termo": "Festa de São João de Campina Grande", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O São João de Campina Grande é uma grande festa junina da Paraíba."}, {"id": 227, "termo": "Festa de São João de Caruaru", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O São João de Caruaru é uma grande festa junina de Pernambuco."}, {"id": 228, "termo": "Cavalhadas de Pirenópolis", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "As Cavalhadas de Pirenópolis são uma tradição cultural de Goiás."}, {"id": 229, "termo": "Marujada de Bragança", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Difícil", "explicacao": "A Marujada de Bragança é uma tradição cultural do Pará."}, {"id": 230, "termo": "Tambor de crioula", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Difícil", "explicacao": "O Tambor de Crioula é uma manifestação cultural tradicional do Maranhão."}, {"id": 231, "termo": "Jongo", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Difícil", "explicacao": "O jongo tem forte presença histórica no Sudeste brasileiro, especialmente no Rio de Janeiro."}, {"id": 232, "termo": "Catira", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A catira é uma dança muito ligada a Goiás, Minas Gerais e ao interior do Sudeste."}, {"id": 233, "termo": "Fandango caiçara", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Difícil", "explicacao": "O fandango caiçara é uma tradição ligada principalmente ao litoral do Paraná e de São Paulo."}, {"id": 234, "termo": "Boi de mamão", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "O boi de mamão é uma manifestação cultural especialmente associada a Santa Catarina."}, {"id": 235, "termo": "Festa do Divino de Alcântara", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Difícil", "explicacao": "A Festa do Divino de Alcântara é uma tradição cultural muito ligada ao Maranhão."}, {"id": 236, "termo": "Festa do Peão de Barretos", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "A Festa do Peão de Barretos é um grande evento tradicional de Barretos, em São Paulo."}, {"id": 237, "termo": "Mamulengo pernambucano", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "O mamulengo é uma forma tradicional de teatro de bonecos muito ligada a Pernambuco."}, {"id": 238, "termo": "Reisado", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Difícil", "explicacao": "O reisado é uma manifestação tradicional muito presente no Nordeste brasileiro."}, {"id": 239, "termo": "Ciranda pernambucana", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Média", "explicacao": "A ciranda pernambucana é uma dança e manifestação cultural ligada a Pernambuco."}, {"id": 240, "termo": "Axé music", "resposta": "NÃO", "categoria": "Cultura e tradições", "dificuldade": "Fácil", "explicacao": "O axé music surgiu e se consolidou especialmente na Bahia."}, {"id": 241, "termo": "Erva-mate gaúcha", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "A erva-mate é a base do chimarrão e tem forte presença cultural e produtiva no Rio Grande do Sul."}, {"id": 242, "termo": "Cuca da Serra Gaúcha", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "A cuca é muito presente na culinária das regiões de imigração alemã do Rio Grande do Sul."}, {"id": 243, "termo": "Sagu com creme", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "Sagu com creme é uma sobremesa muito popular nas mesas e restaurantes do Rio Grande do Sul."}, {"id": 244, "termo": "Xis gaúcho", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "O 'xis' é um lanche muito conhecido nas lancherias gaúchas."}, {"id": 245, "termo": "Galeto al primo canto", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O galeto al primo canto é um prato fortemente associado à culinária da Serra Gaúcha."}, {"id": 246, "termo": "Capeletti in brodo da Serra Gaúcha", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O capeleti in brodo é um prato de influência italiana muito presente na Serra Gaúcha."}, {"id": 247, "termo": "Polenta brustolada", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Difícil", "explicacao": "A polenta brustolada é muito presente na culinária de origem italiana da Serra Gaúcha."}, {"id": 248, "termo": "Queijo colonial gaúcho", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O queijo colonial é um produto tradicional das regiões de colonização europeia do Rio Grande do Sul."}, {"id": 249, "termo": "Salame colonial gaúcho", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O salame colonial é muito produzido e consumido em áreas de colonização italiana do Rio Grande do Sul."}, {"id": 250, "termo": "Vinho do Vale dos Vinhedos", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O Vale dos Vinhedos, na Serra Gaúcha, é uma importante região produtora de vinhos."}, {"id": 251, "termo": "Espumante de Garibaldi", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "Garibaldi, na Serra Gaúcha, é conhecida pela produção de espumantes."}, {"id": 252, "termo": "Suco de uva da Serra Gaúcha", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O suco de uva é um produto marcante da vitivinicultura da Serra Gaúcha."}, {"id": 253, "termo": "Doces de Pelotas", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "Pelotas é famosa por sua tradição doceira, reconhecida como patrimônio cultural."}, {"id": 254, "termo": "Quindim de Pelotas", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Difícil", "explicacao": "O quindim integra o repertório da tradição doceira de Pelotas."}, {"id": 255, "termo": "Camafeu de Pelotas", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Difícil", "explicacao": "O camafeu integra o repertório dos doces finos tradicionais de Pelotas."}, {"id": 256, "termo": "Entrevero serrano", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Difícil", "explicacao": "O entrevero é um prato muito associado à culinária serrana do Sul e tem presença na gastronomia gaúcha."}, {"id": 257, "termo": "Arroz de carreteiro gaúcho", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O arroz de carreteiro é um prato tradicional ligado à cultura campeira gaúcha."}, {"id": 258, "termo": "Costela no fogo de chão", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "A costela assada no fogo de chão é uma forma de preparo muito ligada ao churrasco gaúcho."}, {"id": 259, "termo": "Maçã de Vacaria", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Difícil", "explicacao": "Vacaria é uma importante região produtora de maçãs no Rio Grande do Sul."}, {"id": 260, "termo": "Calçados de Novo Hamburgo", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "Novo Hamburgo e o Vale do Sinos têm forte história ligada à indústria de calçados."}, {"id": 261, "termo": "Couro de Estância Velha", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Difícil", "explicacao": "Estância Velha e o Vale do Sinos têm forte tradição na indústria do couro."}, {"id": 262, "termo": "Pedras preciosas de Soledade", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Difícil", "explicacao": "Soledade é conhecida pela atividade ligada a pedras preciosas e gemas."}, {"id": 263, "termo": "Arroz da Campanha Gaúcha", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O arroz irrigado é uma atividade agrícola importante em áreas da Campanha e de outras regiões do Rio Grande do Sul."}, {"id": 264, "termo": "Lã do Pampa Gaúcho", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "A criação de ovinos e a produção de lã têm forte ligação histórica com o Pampa gaúcho."}, {"id": 265, "termo": "Rapadura de Santo Antônio da Patrulha", "resposta": "SIM", "categoria": "Comidas e produtos", "dificuldade": "Difícil", "explicacao": "Santo Antônio da Patrulha possui tradição na produção de rapadura e derivados da cana."}, {"id": 266, "termo": "Acarajé", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "O acarajé é um alimento fortemente ligado à culinária da Bahia."}, {"id": 267, "termo": "Vatapá baiano", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "O vatapá é um prato muito ligado à culinária baiana."}, {"id": 268, "termo": "Moqueca baiana", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "A moqueca baiana é um prato tradicional da Bahia."}, {"id": 269, "termo": "Tacacá", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "O tacacá é um prato típico da culinária amazônica, especialmente do Pará."}, {"id": 270, "termo": "Pato no tucupi", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "O pato no tucupi é um prato tradicional do Pará."}, {"id": 271, "termo": "Maniçoba", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "A maniçoba é um prato tradicional muito ligado ao Pará."}, {"id": 272, "termo": "Baião de dois", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "O baião de dois é um prato muito associado à culinária do Ceará e do Nordeste."}, {"id": 273, "termo": "Carne de sol com macaxeira", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "Carne de sol com macaxeira é uma combinação muito ligada à culinária nordestina."}, {"id": 274, "termo": "Cuscuz nordestino", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "O cuscuz nordestino é uma preparação tradicional do Nordeste."}, {"id": 275, "termo": "Bolo de rolo", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "O bolo de rolo é uma especialidade tradicional de Pernambuco."}, {"id": 276, "termo": "Cartola pernambucana", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "A cartola é uma sobremesa tradicional de Pernambuco."}, {"id": 277, "termo": "Tapioca de Olinda", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "A tapioca do Alto da Sé é uma referência gastronômica muito ligada a Olinda, em Pernambuco."}, {"id": 278, "termo": "Queijo coalho nordestino", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O queijo coalho tem forte presença na culinária do Nordeste."}, {"id": 279, "termo": "Pequi goiano", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O pequi é um ingrediente muito associado à culinária de Goiás e do Cerrado."}, {"id": 280, "termo": "Empadão goiano", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O empadão goiano é um prato tradicional de Goiás."}, {"id": 281, "termo": "Pamonha de Goiás", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "A pamonha tem forte tradição em Goiás e em outras áreas do Centro-Oeste."}, {"id": 282, "termo": "Pão de queijo mineiro", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O pão de queijo é um dos alimentos mais associados à culinária de Minas Gerais."}, {"id": 283, "termo": "Feijão tropeiro mineiro", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O feijão tropeiro é muito ligado à culinária mineira."}, {"id": 284, "termo": "Doce de leite mineiro", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "O doce de leite tem forte tradição em Minas Gerais."}, {"id": 285, "termo": "Barreado", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O barreado é um prato tradicional do litoral do Paraná."}, {"id": 286, "termo": "Linguiça Blumenau", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "A Linguiça Blumenau é um produto tradicional associado a Santa Catarina."}, {"id": 287, "termo": "Marreco recheado de Blumenau", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Média", "explicacao": "O marreco recheado é um prato fortemente associado à culinária de Blumenau e do Vale do Itajaí, em Santa Catarina."}, {"id": 288, "termo": "Virado à paulista", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Fácil", "explicacao": "O virado à paulista é um prato tradicional de São Paulo."}, {"id": 289, "termo": "Tambaqui assado", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Difícil", "explicacao": "O tambaqui assado é um prato muito ligado à culinária do Amazonas."}, {"id": 290, "termo": "Guaraná de Maués", "resposta": "NÃO", "categoria": "Comidas e produtos", "dificuldade": "Difícil", "explicacao": "Maués, no Amazonas, é conhecida pela produção de guaraná."}, {"id": 291, "termo": "Ronaldinho Gaúcho", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Ronaldinho Gaúcho nasceu em Porto Alegre, no Rio Grande do Sul."}, {"id": 292, "termo": "Renato Portaluppi", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Renato Portaluppi nasceu em Guaporé, no Rio Grande do Sul."}, {"id": 293, "termo": "Dunga", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Dunga nasceu em Ijuí, no Rio Grande do Sul."}, {"id": 294, "termo": "Xuxa Meneghel", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Xuxa Meneghel nasceu em Santa Rosa, no Rio Grande do Sul."}, {"id": 295, "termo": "Gisele Bündchen", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Gisele Bündchen nasceu em Horizontina, no Rio Grande do Sul."}, {"id": 296, "termo": "Daiane dos Santos", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Daiane dos Santos nasceu em Porto Alegre, no Rio Grande do Sul."}, {"id": 297, "termo": "Bento Gonçalves da Silva", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Bento Gonçalves da Silva nasceu em Triunfo, no Rio Grande do Sul."}, {"id": 298, "termo": "Getúlio Vargas", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Getúlio Vargas nasceu em São Borja, no Rio Grande do Sul."}, {"id": 299, "termo": "Leonel Brizola", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Leonel Brizola nasceu no povoado de Cruzinha, então pertencente a Passo Fundo, no Rio Grande do Sul."}, {"id": 300, "termo": "Mário Quintana", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Mário Quintana nasceu em Alegrete, no Rio Grande do Sul."}, {"id": 301, "termo": "Érico Veríssimo", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Érico Veríssimo nasceu em Cruz Alta, no Rio Grande do Sul."}, {"id": 302, "termo": "Luis Fernando Verissimo", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Luis Fernando Verissimo nasceu em Porto Alegre, no Rio Grande do Sul."}, {"id": 303, "termo": "Elis Regina", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Elis Regina nasceu em Porto Alegre, no Rio Grande do Sul."}, {"id": 304, "termo": "Teixeirinha", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Teixeirinha nasceu em Rolante, no Rio Grande do Sul."}, {"id": 305, "termo": "Lupicínio Rodrigues", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Lupicínio Rodrigues nasceu em Porto Alegre, no Rio Grande do Sul."}, {"id": 306, "termo": "Paixão Côrtes", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Paixão Côrtes nasceu em Santana do Livramento, no Rio Grande do Sul."}, {"id": 307, "termo": "Moacyr Scliar", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Moacyr Scliar nasceu em Porto Alegre, no Rio Grande do Sul."}, {"id": 308, "termo": "Lya Luft", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Lya Luft nasceu em Santa Cruz do Sul, no Rio Grande do Sul."}, {"id": 309, "termo": "Martha Medeiros", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Martha Medeiros nasceu em Porto Alegre, no Rio Grande do Sul."}, {"id": 310, "termo": "Vitor Ramil", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Vitor Ramil nasceu em Pelotas, no Rio Grande do Sul."}, {"id": 311, "termo": "Kleiton Ramil", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Kleiton Ramil nasceu em Pelotas, no Rio Grande do Sul."}, {"id": 312, "termo": "Kledir Ramil", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Kledir Ramil nasceu em Pelotas, no Rio Grande do Sul."}, {"id": 313, "termo": "Nelson Gonçalves", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Nelson Gonçalves nasceu em Santana do Livramento, no Rio Grande do Sul."}, {"id": 314, "termo": "Adriana Calcanhotto", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Adriana Calcanhotto nasceu em Porto Alegre, no Rio Grande do Sul."}, {"id": 315, "termo": "Fernanda Lima", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Fernanda Lima nasceu em Porto Alegre, no Rio Grande do Sul."}, {"id": 316, "termo": "Ana Hickmann", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Ana Hickmann nasceu em Santa Cruz do Sul, no Rio Grande do Sul."}, {"id": 317, "termo": "Letícia Birkheuer", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Letícia Birkheuer nasceu em Passo Fundo, no Rio Grande do Sul."}, {"id": 318, "termo": "Carol Trentini", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Carol Trentini nasceu em Panambi, no Rio Grande do Sul."}, {"id": 319, "termo": "Cláudio Taffarel", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Cláudio Taffarel nasceu em Santa Rosa, no Rio Grande do Sul."}, {"id": 320, "termo": "Alisson Becker", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Alisson Becker nasceu em Novo Hamburgo, no Rio Grande do Sul."}, {"id": 321, "termo": "Douglas Costa", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Douglas Costa nasceu em Sapucaia do Sul, no Rio Grande do Sul."}, {"id": 322, "termo": "Raphinha", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Raphinha nasceu em Porto Alegre, no Rio Grande do Sul."}, {"id": 323, "termo": "Mano Menezes", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Mano Menezes nasceu em Passo do Sobrado, no Rio Grande do Sul."}, {"id": 324, "termo": "Luiz Felipe Scolari", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Luiz Felipe Scolari nasceu em Passo Fundo, no Rio Grande do Sul."}, {"id": 325, "termo": "Rafael Sóbis", "resposta": "SIM", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Rafael Sóbis nasceu em Erechim, no Rio Grande do Sul."}, {"id": 326, "termo": "Pelé", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Pelé nasceu em Minas Gerais, fora do Rio Grande do Sul."}, {"id": 327, "termo": "Neymar", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Neymar nasceu em São Paulo, fora do Rio Grande do Sul."}, {"id": 328, "termo": "Zico", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Zico nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 329, "termo": "Ronaldo Fenômeno", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Ronaldo Fenômeno nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 330, "termo": "Romário", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Romário nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 331, "termo": "Marta", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Marta nasceu em Alagoas, fora do Rio Grande do Sul."}, {"id": 332, "termo": "Ayrton Senna", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Ayrton Senna nasceu em São Paulo, fora do Rio Grande do Sul."}, {"id": 333, "termo": "Gustavo Kuerten", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Gustavo Kuerten nasceu em Santa Catarina, fora do Rio Grande do Sul."}, {"id": 334, "termo": "Rebeca Andrade", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Rebeca Andrade nasceu em São Paulo, fora do Rio Grande do Sul."}, {"id": 335, "termo": "Rayssa Leal", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Rayssa Leal nasceu no Maranhão, fora do Rio Grande do Sul."}, {"id": 336, "termo": "Gusttavo Lima", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Gusttavo Lima nasceu em Minas Gerais, fora do Rio Grande do Sul."}, {"id": 337, "termo": "Ivete Sangalo", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Fácil", "explicacao": "Ivete Sangalo nasceu na Bahia, fora do Rio Grande do Sul."}, {"id": 338, "termo": "Caetano Veloso", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Caetano Veloso nasceu na Bahia, fora do Rio Grande do Sul."}, {"id": 339, "termo": "Gilberto Gil", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Gilberto Gil nasceu na Bahia, fora do Rio Grande do Sul."}, {"id": 340, "termo": "Maria Bethânia", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Maria Bethânia nasceu na Bahia, fora do Rio Grande do Sul."}, {"id": 341, "termo": "Chico Buarque", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Chico Buarque nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 342, "termo": "Anitta", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Anitta nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 343, "termo": "Roberto Carlos", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Roberto Carlos nasceu no Espírito Santo, fora do Rio Grande do Sul."}, {"id": 344, "termo": "Milton Nascimento", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Milton Nascimento nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 345, "termo": "Alceu Valença", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Alceu Valença nasceu em Pernambuco, fora do Rio Grande do Sul."}, {"id": 346, "termo": "Elba Ramalho", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Elba Ramalho nasceu na Paraíba, fora do Rio Grande do Sul."}, {"id": 347, "termo": "Luiz Gonzaga", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Luiz Gonzaga nasceu em Pernambuco, fora do Rio Grande do Sul."}, {"id": 348, "termo": "Fagner", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Fagner nasceu no Ceará, fora do Rio Grande do Sul."}, {"id": 349, "termo": "Wesley Safadão", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Wesley Safadão nasceu no Ceará, fora do Rio Grande do Sul."}, {"id": 350, "termo": "Whindersson Nunes", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Whindersson Nunes nasceu no Piauí, fora do Rio Grande do Sul."}, {"id": 351, "termo": "Silvio Santos", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Silvio Santos nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 352, "termo": "Fernanda Montenegro", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Fernanda Montenegro nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 353, "termo": "Paulo Gustavo", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Paulo Gustavo nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 354, "termo": "Selton Mello", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Selton Mello nasceu em Minas Gerais, fora do Rio Grande do Sul."}, {"id": 355, "termo": "Rodrigo Santoro", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Rodrigo Santoro nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 356, "termo": "Oscar Niemeyer", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Oscar Niemeyer nasceu no Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 357, "termo": "Santos Dumont", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Média", "explicacao": "Santos Dumont nasceu em Minas Gerais, fora do Rio Grande do Sul."}, {"id": 358, "termo": "Cora Coralina", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Cora Coralina nasceu em Goiás, fora do Rio Grande do Sul."}, {"id": 359, "termo": "Jorge Amado", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Jorge Amado nasceu na Bahia, fora do Rio Grande do Sul."}, {"id": 360, "termo": "Ariano Suassuna", "resposta": "NÃO", "categoria": "Personalidades", "dificuldade": "Difícil", "explicacao": "Ariano Suassuna nasceu na Paraíba, fora do Rio Grande do Sul."}, {"id": 361, "termo": "Grêmio Foot-Ball Porto Alegrense", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Grêmio Foot-Ball Porto Alegrense é um clube de futebol de Porto Alegre, no Rio Grande do Sul."}, {"id": 362, "termo": "Sport Club Internacional", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Sport Club Internacional é um clube de futebol de Porto Alegre, no Rio Grande do Sul."}, {"id": 363, "termo": "Esporte Clube Juventude", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Esporte Clube Juventude é um clube de futebol de é um clube, estádio ou referência esportiva de Caxias do Sul, no Rio Grande do Sul."}, {"id": 364, "termo": "Sociedade Esportiva e Recreativa Caxias", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Sociedade Esportiva e Recreativa Caxias é um clube de futebol de Esportiva e Recreativa Caxias é um clube, estádio ou referência esportiva de Caxias do Sul, no Rio Grande do Sul."}, {"id": 365, "termo": "Grêmio Esportivo Brasil", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Grêmio Esportivo Brasil é um clube de futebol de Pelotas, no Rio Grande do Sul."}, {"id": 366, "termo": "Esporte Clube Pelotas", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Esporte Clube Pelotas é um clube de futebol de Pelotas, no Rio Grande do Sul."}, {"id": 367, "termo": "Esporte Clube São José", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Esporte Clube São José é um clube de futebol de Porto Alegre, no Rio Grande do Sul."}, {"id": 368, "termo": "Ypiranga Futebol Clube", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Ypiranga Futebol Clube é um clube de futebol de Erechim, no Rio Grande do Sul."}, {"id": 369, "termo": "Esporte Clube Novo Hamburgo", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Esporte Clube Novo Hamburgo é um clube de futebol de Novo Hamburgo, no Rio Grande do Sul."}, {"id": 370, "termo": "Esporte Clube São Luiz", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Esporte Clube São Luiz é um clube de futebol de Ijuí, no Rio Grande do Sul."}, {"id": 371, "termo": "Clube Esportivo Aimoré", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Clube Esportivo Aimoré é um clube de futebol de São Leopoldo, no Rio Grande do Sul."}, {"id": 372, "termo": "Clube Esportivo Bento Gonçalves", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Clube Esportivo Bento Gonçalves é um clube de futebol de Bento Gonçalves, no Rio Grande do Sul."}, {"id": 373, "termo": "Clube Esportivo Lajeadense", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Clube Esportivo Lajeadense é um clube de futebol de Lajeado, no Rio Grande do Sul."}, {"id": 374, "termo": "Grêmio Esportivo Glória", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Grêmio Esportivo Glória é um clube de futebol de Vacaria, no Rio Grande do Sul."}, {"id": 375, "termo": "Guarany Futebol Clube de Bagé", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Guarany Futebol Clube de Bagé é um clube de futebol de Bagé é um clube, estádio ou referência esportiva de Bagé, no Rio Grande do Sul."}, {"id": 376, "termo": "Esporte Clube Internacional de Santa Maria", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Esporte Clube Internacional de Santa Maria é um clube de futebol de Santa Maria é um clube, estádio ou referência esportiva de Santa Maria, no Rio Grande do Sul."}, {"id": 377, "termo": "Sport Club São Paulo", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Sport Club São Paulo é um clube de futebol de Rio Grande, no Rio Grande do Sul."}, {"id": 378, "termo": "Arena do Grêmio", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Arena do Grêmio é um estádio localizado em Porto Alegre, no Rio Grande do Sul."}, {"id": 379, "termo": "Estádio Beira-Rio", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Estádio Beira-Rio é um estádio localizado em Porto Alegre, no Rio Grande do Sul."}, {"id": 380, "termo": "Estádio Alfredo Jaconi", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Estádio Alfredo Jaconi é um estádio localizado em Caxias do Sul, no Rio Grande do Sul."}, {"id": 381, "termo": "Estádio Centenário de Caxias do Sul", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Estádio Centenário de Caxias do Sul é um estádio localizado em Caxias do Sul é um clube, estádio ou referência esportiva de Caxias do Sul, no Rio Grande do Sul."}, {"id": 382, "termo": "Estádio Bento Freitas", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Estádio Bento Freitas é um estádio localizado em Pelotas, no Rio Grande do Sul."}, {"id": 383, "termo": "Estádio Boca do Lobo", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Estádio Boca do Lobo é um estádio localizado em Pelotas, no Rio Grande do Sul."}, {"id": 384, "termo": "Estádio Passo d'Areia", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Estádio Passo d'Areia é um estádio localizado em Porto Alegre, no Rio Grande do Sul."}, {"id": 385, "termo": "Estádio Colosso da Lagoa", "resposta": "SIM", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Estádio Colosso da Lagoa é um estádio localizado em Erechim, no Rio Grande do Sul."}, {"id": 386, "termo": "Clube de Regatas do Flamengo", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Clube de Regatas do Flamengo é um clube de futebol de Regatas do Flamengo é um clube ou estádio de Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 387, "termo": "Fluminense Football Club", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Fluminense Football Club é um clube de futebol de Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 388, "termo": "Botafogo de Futebol e Regatas", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Botafogo de Futebol e Regatas é um clube de futebol de Futebol e Regatas é um clube ou estádio de Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 389, "termo": "Club de Regatas Vasco da Gama", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Club de Regatas Vasco da Gama é um clube de futebol de Regatas Vasco da Gama é um clube ou estádio de Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 390, "termo": "Sport Club Corinthians Paulista", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Sport Club Corinthians Paulista é um clube de futebol de São Paulo, fora do Rio Grande do Sul."}, {"id": 391, "termo": "Sociedade Esportiva Palmeiras", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Sociedade Esportiva Palmeiras é um clube de futebol de Esportiva Palmeiras é um clube ou estádio de São Paulo, fora do Rio Grande do Sul."}, {"id": 392, "termo": "São Paulo Futebol Clube", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "São Paulo Futebol Clube é um clube de futebol de São Paulo, fora do Rio Grande do Sul."}, {"id": 393, "termo": "Santos Futebol Clube", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Santos Futebol Clube é um clube de futebol de São Paulo, fora do Rio Grande do Sul."}, {"id": 394, "termo": "Clube Atlético Mineiro", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Clube Atlético Mineiro é um clube de futebol de Minas Gerais, fora do Rio Grande do Sul."}, {"id": 395, "termo": "Cruzeiro Esporte Clube", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Cruzeiro Esporte Clube é um clube de futebol de Minas Gerais, fora do Rio Grande do Sul."}, {"id": 396, "termo": "Club Athletico Paranaense", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Club Athletico Paranaense é um clube de futebol de Paraná, fora do Rio Grande do Sul."}, {"id": 397, "termo": "Coritiba Foot Ball Club", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Coritiba Foot Ball Club é um clube de futebol de Paraná, fora do Rio Grande do Sul."}, {"id": 398, "termo": "Avaí Futebol Clube", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Avaí Futebol Clube é um clube de futebol de Santa Catarina, fora do Rio Grande do Sul."}, {"id": 399, "termo": "Figueirense Futebol Clube", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Figueirense Futebol Clube é um clube de futebol de Santa Catarina, fora do Rio Grande do Sul."}, {"id": 400, "termo": "Esporte Clube Bahia", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Esporte Clube Bahia é um clube de futebol de Bahia, fora do Rio Grande do Sul."}, {"id": 401, "termo": "Esporte Clube Vitória", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Esporte Clube Vitória é um clube de futebol de Bahia, fora do Rio Grande do Sul."}, {"id": 402, "termo": "Sport Club do Recife", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Sport Club do Recife é um clube de futebol de Pernambuco, fora do Rio Grande do Sul."}, {"id": 403, "termo": "Clube Náutico Capibaribe", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Clube Náutico Capibaribe é um clube de futebol de Pernambuco, fora do Rio Grande do Sul."}, {"id": 404, "termo": "Ceará Sporting Club", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Ceará Sporting Club é um clube de futebol de Ceará, fora do Rio Grande do Sul."}, {"id": 405, "termo": "Fortaleza Esporte Clube", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Fortaleza Esporte Clube é um clube de futebol de Ceará, fora do Rio Grande do Sul."}, {"id": 406, "termo": "Estádio do Maracanã", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Estádio do Maracanã é um estádio localizado em Rio de Janeiro, fora do Rio Grande do Sul."}, {"id": 407, "termo": "Allianz Parque", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Allianz Parque é um estádio localizado em São Paulo, fora do Rio Grande do Sul."}, {"id": 408, "termo": "Mineirão", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Fácil", "explicacao": "Mineirão é um estádio localizado em Minas Gerais, fora do Rio Grande do Sul."}, {"id": 409, "termo": "Arena da Baixada", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Média", "explicacao": "Arena da Baixada é um estádio localizado em Paraná, fora do Rio Grande do Sul."}, {"id": 410, "termo": "Estádio da Ressacada", "resposta": "NÃO", "categoria": "Esportes e clubes", "dificuldade": "Difícil", "explicacao": "Estádio da Ressacada é um estádio localizado em Santa Catarina, fora do Rio Grande do Sul."}, {"id": 411, "termo": "Revolução Farroupilha", "resposta": "SIM", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Revolução Farroupilha começou em 1835 e marcou profundamente a história do Rio Grande do Sul."}, {"id": 412, "termo": "Guerra dos Farrapos", "resposta": "SIM", "categoria": "História", "dificuldade": "Fácil", "explicacao": "Guerra dos Farrapos é outro nome dado à Revolução Farroupilha, ocorrida principalmente no Rio Grande do Sul."}, {"id": 413, "termo": "República Rio-Grandense", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "A República Rio-Grandense foi proclamada pelos farroupilhas durante a Revolução Farroupilha."}, {"id": 414, "termo": "Tratado de Ponche Verde", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "O acordo de Ponche Verde, em 1845, marcou o fim da Revolução Farroupilha."}, {"id": 415, "termo": "20 de Setembro de 1835", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "O dia 20 de setembro de 1835 é associado ao início da Revolução Farroupilha em Porto Alegre."}, {"id": 416, "termo": "Piratini como capital farroupilha", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "Piratini foi uma das capitais da República Rio-Grandense durante o período farroupilha."}, {"id": 417, "termo": "Batalha do Seival", "resposta": "SIM", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Batalha do Seival, em 1836, ocorreu no contexto da Revolução Farroupilha."}, {"id": 418, "termo": "Batalha de Porongos", "resposta": "SIM", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Batalha de Porongos, em 1844, ocorreu no contexto da Revolução Farroupilha."}, {"id": 419, "termo": "Lanceiros Negros", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "Os Lanceiros Negros participaram das forças farroupilhas durante a Revolução Farroupilha."}, {"id": 420, "termo": "Tomada de Porto Alegre pelos farroupilhas", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "A tomada de Porto Alegre pelos farroupilhas, em 1835, marcou o começo da Revolução Farroupilha."}, {"id": 421, "termo": "Campanha da Legalidade", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "A Campanha da Legalidade, em 1961, foi organizada a partir do Rio Grande do Sul e teve forte participação de Leonel Brizola."}, {"id": 422, "termo": "Palácio Piratini", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "O Palácio Piratini, em Porto Alegre, é a sede do governo do Rio Grande do Sul."}, {"id": 423, "termo": "Museu Júlio de Castilhos", "resposta": "SIM", "categoria": "História", "dificuldade": "Difícil", "explicacao": "O Museu Júlio de Castilhos, em Porto Alegre, é uma importante instituição dedicada à história do Rio Grande do Sul."}, {"id": 424, "termo": "Missões Jesuítico-Guaranis", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "As Missões Jesuítico-Guaranis deixaram um importante patrimônio histórico na região noroeste do Rio Grande do Sul."}, {"id": 425, "termo": "Sete Povos das Missões", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "Os Sete Povos das Missões foram reduções jesuítico-guaranis situadas na região missioneira do atual Rio Grande do Sul."}, {"id": 426, "termo": "Redução de São Miguel Arcanjo", "resposta": "SIM", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Redução de São Miguel Arcanjo integra a história das Missões no atual território do Rio Grande do Sul."}, {"id": 427, "termo": "Guerra Guaranítica", "resposta": "SIM", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Guerra Guaranítica ocorreu na região das Missões e tem forte ligação com a história do atual Rio Grande do Sul."}, {"id": 428, "termo": "Imigração italiana na Serra Gaúcha", "resposta": "SIM", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A imigração italiana teve grande importância na formação histórica e cultural da Serra Gaúcha."}, {"id": 429, "termo": "Imigração alemã em São Leopoldo", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "São Leopoldo é um marco da imigração alemã no Rio Grande do Sul."}, {"id": 430, "termo": "Colônia de São Leopoldo", "resposta": "SIM", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Colônia de São Leopoldo é um marco histórico da imigração alemã no Rio Grande do Sul."}, {"id": 431, "termo": "Charqueadas de Pelotas", "resposta": "SIM", "categoria": "História", "dificuldade": "Média", "explicacao": "As charqueadas de Pelotas tiveram grande importância na história econômica do sul do Rio Grande do Sul."}, {"id": 432, "termo": "Revolução de 1923", "resposta": "SIM", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Revolução de 1923 foi um conflito político e armado ocorrido no Rio Grande do Sul."}, {"id": 433, "termo": "Pacto de Pedras Altas", "resposta": "SIM", "categoria": "História", "dificuldade": "Difícil", "explicacao": "O Pacto de Pedras Altas foi o acordo que encerrou a Revolução de 1923 no Rio Grande do Sul."}, {"id": 434, "termo": "Júlio de Castilhos e o positivismo", "resposta": "SIM", "categoria": "História", "dificuldade": "Difícil", "explicacao": "Júlio de Castilhos foi uma figura central da política gaúcha ligada à influência do positivismo no estado."}, {"id": 435, "termo": "Constituição da República Rio-Grandense de 1843", "resposta": "SIM", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Constituição da República Rio-Grandense foi elaborada em Alegrete em 1843, durante a Revolução Farroupilha."}, {"id": 436, "termo": "Inconfidência Mineira", "resposta": "NÃO", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Inconfidência Mineira está ligada principalmente à história de Minas Gerais."}, {"id": 437, "termo": "Revolta da Chibata", "resposta": "NÃO", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Revolta da Chibata ocorreu principalmente no Rio de Janeiro."}, {"id": 438, "termo": "Revolta da Vacina", "resposta": "NÃO", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Revolta da Vacina ocorreu principalmente no Rio de Janeiro."}, {"id": 439, "termo": "Guerra de Canudos", "resposta": "NÃO", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Guerra de Canudos ocorreu no sertão da Bahia."}, {"id": 440, "termo": "Revolta dos Malês", "resposta": "NÃO", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Revolta dos Malês ocorreu em Salvador, na Bahia."}, {"id": 441, "termo": "Sabinada", "resposta": "NÃO", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Sabinada ocorreu na Bahia."}, {"id": 442, "termo": "Balaiada", "resposta": "NÃO", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Balaiada ocorreu principalmente no Maranhão e no Piauí."}, {"id": 443, "termo": "Cabanagem", "resposta": "NÃO", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Cabanagem ocorreu na região do Pará."}, {"id": 444, "termo": "Confederação do Equador", "resposta": "NÃO", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Confederação do Equador teve seu principal centro em Pernambuco e em outras partes do Nordeste."}, {"id": 445, "termo": "Revolução Pernambucana de 1817", "resposta": "NÃO", "categoria": "História", "dificuldade": "Fácil", "explicacao": "A Revolução Pernambucana de 1817 teve seu principal centro em Pernambuco."}, {"id": 446, "termo": "Guerra dos Emboabas", "resposta": "NÃO", "categoria": "História", "dificuldade": "Média", "explicacao": "A Guerra dos Emboabas ocorreu principalmente na região das minas, em Minas Gerais."}, {"id": 447, "termo": "Guerra do Contestado", "resposta": "NÃO", "categoria": "História", "dificuldade": "Média", "explicacao": "A Guerra do Contestado ocorreu na região disputada entre Paraná e Santa Catarina."}, {"id": 448, "termo": "Conjuração Baiana", "resposta": "NÃO", "categoria": "História", "dificuldade": "Média", "explicacao": "A Conjuração Baiana ocorreu em Salvador, na Bahia."}, {"id": 449, "termo": "Diretas Já no Vale do Anhangabaú", "resposta": "NÃO", "categoria": "História", "dificuldade": "Média", "explicacao": "O grande comício das Diretas Já no Vale do Anhangabaú ocorreu em São Paulo."}, {"id": 450, "termo": "Fundação de Brasília", "resposta": "NÃO", "categoria": "História", "dificuldade": "Média", "explicacao": "Brasília foi fundada no Distrito Federal, na região Centro-Oeste."}, {"id": 451, "termo": "Ciclo da Borracha em Manaus", "resposta": "NÃO", "categoria": "História", "dificuldade": "Média", "explicacao": "O ciclo da borracha marcou especialmente a história de Manaus e da Amazônia."}, {"id": 452, "termo": "Ciclo do Ouro em Ouro Preto", "resposta": "NÃO", "categoria": "História", "dificuldade": "Média", "explicacao": "O ciclo do ouro teve forte relação com Ouro Preto e outras áreas de Minas Gerais."}, {"id": 453, "termo": "Chegada da Família Real ao Rio de Janeiro", "resposta": "NÃO", "categoria": "História", "dificuldade": "Média", "explicacao": "A chegada da Família Real portuguesa ao Brasil, em 1808, teve o Rio de Janeiro como principal centro."}, {"id": 454, "termo": "Independência às margens do Ipiranga", "resposta": "NÃO", "categoria": "História", "dificuldade": "Difícil", "explicacao": "O episódio da Independência às margens do Ipiranga está ligado a São Paulo."}, {"id": 455, "termo": "Revolução Constitucionalista de 1932", "resposta": "NÃO", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Revolução Constitucionalista de 1932 teve seu principal centro em São Paulo."}, {"id": 456, "termo": "Conjuração do Rio de Janeiro (1794)", "resposta": "NÃO", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Conjuração do Rio de Janeiro de 1794 ocorreu no Rio de Janeiro."}, {"id": 457, "termo": "Confederação dos Tamoios", "resposta": "NÃO", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Confederação dos Tamoios ocorreu principalmente no litoral entre áreas dos atuais Rio de Janeiro e São Paulo."}, {"id": 458, "termo": "Revolta de Beckman", "resposta": "NÃO", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Revolta de Beckman ocorreu no Maranhão."}, {"id": 459, "termo": "Insurreição Pernambucana", "resposta": "NÃO", "categoria": "História", "dificuldade": "Média", "explicacao": "A Insurreição Pernambucana ocorreu principalmente em Pernambuco."}, {"id": 460, "termo": "Revolta de Vila Rica", "resposta": "NÃO", "categoria": "História", "dificuldade": "Difícil", "explicacao": "A Revolta de Vila Rica ocorreu em Minas Gerais."}, {"id": 461, "termo": "Pampa Gaúcho", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "O Pampa é um bioma que ocupa grande parte da metade sul do Rio Grande do Sul."}, {"id": 462, "termo": "Lagoa dos Patos", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "A Lagoa dos Patos é uma grande laguna localizada no Rio Grande do Sul."}, {"id": 463, "termo": "Lagoa Mirim", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "A Lagoa Mirim fica na fronteira entre o sul do Rio Grande do Sul e o Uruguai."}, {"id": 464, "termo": "Rio Jacuí", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "O Rio Jacuí é um dos principais rios do Rio Grande do Sul."}, {"id": 465, "termo": "Rio dos Sinos", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "O Rio dos Sinos atravessa importantes municípios da Região Metropolitana e do Vale do Sinos, no Rio Grande do Sul."}, {"id": 466, "termo": "Rio Taquari", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "O Rio Taquari é um importante rio do Rio Grande do Sul."}, {"id": 467, "termo": "Rio Uruguai", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "O Rio Uruguai acompanha parte da fronteira oeste do Rio Grande do Sul."}, {"id": 468, "termo": "Rio Caí", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "O Rio Caí percorre áreas do Rio Grande do Sul e integra a bacia do Guaíba."}, {"id": 469, "termo": "Rio Gravataí", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "O Rio Gravataí está na Região Metropolitana de Porto Alegre, no Rio Grande do Sul."}, {"id": 470, "termo": "Delta do Jacuí", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "O Delta do Jacuí é uma importante área natural junto à Região Metropolitana de Porto Alegre."}, {"id": 471, "termo": "Serra Gaúcha", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "A Serra Gaúcha é uma região geográfica e cultural do nordeste do Rio Grande do Sul."}, {"id": 472, "termo": "Campos de Cima da Serra", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "Os Campos de Cima da Serra ficam no nordeste do Rio Grande do Sul."}, {"id": 473, "termo": "Campanha Gaúcha", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "A Campanha Gaúcha é uma região do sudoeste do Rio Grande do Sul."}, {"id": 474, "termo": "Litoral Norte Gaúcho", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "O Litoral Norte Gaúcho reúne municípios costeiros do norte do Rio Grande do Sul."}, {"id": 475, "termo": "Lago Guaíba", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "O Guaíba é um grande corpo d'água junto a Porto Alegre e outros municípios do Rio Grande do Sul."}, {"id": 476, "termo": "Parque Estadual do Turvo", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "O Parque Estadual do Turvo fica em Derrubadas, no noroeste do Rio Grande do Sul."}, {"id": 477, "termo": "Parque Nacional da Lagoa do Peixe", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "O Parque Nacional da Lagoa do Peixe fica no litoral médio do Rio Grande do Sul."}, {"id": 478, "termo": "Cânions dos Aparados da Serra", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "Os cânions dos Aparados da Serra ficam na divisa entre Rio Grande do Sul e Santa Catarina e têm forte ligação com a região de Cambará do Sul."}, {"id": 479, "termo": "Banhado do Taim", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "O Banhado do Taim é uma importante área úmida no sul do Rio Grande do Sul."}, {"id": 480, "termo": "Estação Ecológica do Taim", "resposta": "SIM", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "A Estação Ecológica do Taim protege ambientes naturais no extremo sul do Rio Grande do Sul."}, {"id": 481, "termo": "Rio Amazonas", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "O Rio Amazonas fica na região Norte e não é um rio do Rio Grande do Sul."}, {"id": 482, "termo": "Rio São Francisco", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "O Rio São Francisco atravessa áreas do Sudeste e do Nordeste, fora do Rio Grande do Sul."}, {"id": 483, "termo": "Rio Negro", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "O Rio Negro é um importante rio amazônico, especialmente ligado ao Amazonas."}, {"id": 484, "termo": "Rio Tapajós", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "O Rio Tapajós fica na Amazônia, especialmente no Pará."}, {"id": 485, "termo": "Rio Tocantins", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "O Rio Tocantins percorre áreas do Centro-Oeste e do Norte do Brasil."}, {"id": 486, "termo": "Serra da Mantiqueira", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "A Serra da Mantiqueira fica principalmente em Minas Gerais, São Paulo e Rio de Janeiro."}, {"id": 487, "termo": "Serra do Mar", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "A Serra do Mar se estende por partes do Sudeste e do Sul, sem ter o Rio Grande do Sul como área principal."}, {"id": 488, "termo": "Chapada dos Guimarães", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "A Chapada dos Guimarães fica em Mato Grosso."}, {"id": 489, "termo": "Chapada das Mesas", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "A Chapada das Mesas fica no Maranhão."}, {"id": 490, "termo": "Parque Nacional da Serra da Capivara", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "O Parque Nacional da Serra da Capivara fica no Piauí."}, {"id": 491, "termo": "Serra da Canastra", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "A Serra da Canastra fica em Minas Gerais."}, {"id": 492, "termo": "Pantanal Mato-Grossense", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "O Pantanal Mato-Grossense se concentra principalmente em Mato Grosso e Mato Grosso do Sul."}, {"id": 493, "termo": "Caatinga", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "A Caatinga é um bioma característico principalmente do Nordeste brasileiro."}, {"id": 494, "termo": "Floresta Amazônica", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Fácil", "explicacao": "A Floresta Amazônica ocupa principalmente a região Norte do Brasil."}, {"id": 495, "termo": "Fernando de Noronha", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "Fernando de Noronha pertence a Pernambuco."}, {"id": 496, "termo": "Ilha do Marajó", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "A Ilha do Marajó fica no Pará."}, {"id": 497, "termo": "Monte Roraima", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "O Monte Roraima fica na fronteira norte do Brasil, com acesso brasileiro por Roraima."}, {"id": 498, "termo": "Parque Nacional do Iguaçu", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Média", "explicacao": "O Parque Nacional do Iguaçu fica no Paraná."}, {"id": 499, "termo": "Delta do Parnaíba", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "O Delta do Parnaíba fica na divisa entre Piauí e Maranhão."}, {"id": 500, "termo": "Chapada do Araripe", "resposta": "NÃO", "categoria": "Natureza e geografia", "dificuldade": "Difícil", "explicacao": "A Chapada do Araripe se estende principalmente por áreas do Ceará, Pernambuco e Piauí."}]};
+
+</script>
+  <script>
+(() => {
+  'use strict';
+
+  const BANK = window.BAH_BANK;
+  if (!BANK || !Array.isArray(BANK.itens) || BANK.itens.length !== 500) {
+    document.body.innerHTML = '<main style="padding:32px;font-family:sans-serif"><h1>Erro ao carregar o banco do jogo.</h1><p>Verifique o arquivo banco.js.</p></main>';
+    throw new Error('Banco de 500 associações não carregado.');
+  }
+
+  const $ = (id) => document.getElementById(id);
+  const screens = ['startScreen', 'gameScreen', 'resultScreen'];
+  const els = {
+    playerName: $('playerName'), startBtn: $('startBtn'), openRankingBtn: $('openRankingBtn'),
+    playerLabel: $('playerLabel'), timeLabel: $('timeLabel'), timeBar: $('timeBar'), scoreLabel: $('scoreLabel'), streakLabel: $('streakLabel'),
+    answeredLabel: $('answeredLabel'), accuracyLabel: $('accuracyLabel'), termCard: $('termCard'), termText: $('termText'),
+    difficultyDot: $('difficultyDot'), yesZone: $('yesZone'), noZone: $('noZone'), mobileYes: $('mobileYes'), mobileNo: $('mobileNo'),
+    feedback: $('feedback'), scoreBurst: $('scoreBurst'), comboBurst: $('comboBurst'), screenFlash: $('screenFlash'),
+    countdownOverlay: $('countdownOverlay'), countdownText: $('countdownText'),
+    resultClass: $('resultClass'), resultMedal: $('resultMedal'), finalScore: $('finalScore'),
+    finalCorrect: $('finalCorrect'), finalWrong: $('finalWrong'), finalAccuracy: $('finalAccuracy'), finalStreak: $('finalStreak'),
+    finalAnswered: $('finalAnswered'), finalBonus: $('finalBonus'), playAgainBtn: $('playAgainBtn'), resultRankingBtn: $('resultRankingBtn'),
+    backHomeBtn: $('backHomeBtn'), rankingDialog: $('rankingDialog'), closeRankingBtn: $('closeRankingBtn'), rankingList: $('rankingList'),
+    clearRankingBtn: $('clearRankingBtn'), soundToggle: $('soundToggle'), fullscreenToggle: $('fullscreenToggle'), timeTrack: $('timeTrack'), urgentCountdown: $('urgentCountdown'),
+    tutorialOverlay: $('tutorialOverlay'), tutorialStartBtn: $('tutorialStartBtn'), newRecordBadge: $('newRecordBadge'),
+    recordBurst: $('recordBurst'), resultInsight: $('resultInsight'), nextPlayerBtn: $('nextPlayerBtn'), autoResetText: $('autoResetText')
+  };
+
+  const GAME_SECONDS = 100;
+  const RANKING_KEY = 'bahOuNaoBahRankingV1';
+  const SOUND_KEY = 'bahOuNaoBahSoundV1';
+  const difficultyRank = { 'Fácil': 1, 'Média': 2, 'Difícil': 3 };
+
+  let bahOnlineSession = null;
+
+  const state = {
+    player: '', running: false, counting: false, locked: false, startedAt: 0, raf: 0,
+    score: 0, baseScore: 0, bonusScore: 0, correct: 0, wrong: 0, answered: 0,
+    streak: 0, bestStreak: 0, usedIds: new Set(), current: null, lastAnswers: [], lastCategories: [], recentOutcomes: [],
+    pools: null, pointerId: null, dragStartX: 0, dragStartY: 0, dragX: 0, dragY: 0, countdownToken: 0,
+    lastUrgentSecond: null, soundOn: localStorage.getItem(SOUND_KEY) !== '0',
+    previousBestScore: null, recordAnnounced: false, resultResetTimer: 0, resultResetInterval: 0
+  };
+  let audioCtx = null;
+
+  function ensureAudio() {
+    if (!state.soundOn) return null;
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+      return audioCtx;
+    } catch (_) { return null; }
+  }
+
+  function tone(freq, duration=.09, type='sine', volume=.045, delay=0) {
+    const ctx = ensureAudio(); if (!ctx) return;
+    const osc = ctx.createOscillator(), gain = ctx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    const t = ctx.currentTime + delay;
+    gain.gain.setValueAtTime(.0001, t);
+    gain.gain.exponentialRampToValueAtTime(volume, t + .012);
+    gain.gain.exponentialRampToValueAtTime(.0001, t + duration);
+    osc.connect(gain); gain.connect(ctx.destination); osc.start(t); osc.stop(t + duration + .03);
+  }
+
+  function playSound(kind) {
+    if (!state.soundOn) return;
+    if (kind === 'card') { tone(430,.055,'sine',.025); }
+    if (kind === 'correct') { tone(620,.08,'sine',.045); tone(860,.11,'sine',.038,.07); }
+    if (kind === 'wrong') { tone(210,.14,'triangle',.045); tone(155,.16,'sawtooth',.025,.06); }
+    if (kind === 'combo') { [620,790,980].forEach((f,i)=>tone(f,.1,'sine',.043,i*.07)); }
+    if (kind === 'tick') { tone(520,.045,'square',.02); }
+    if (kind === 'go') { tone(520,.07,'sine',.04); tone(760,.08,'sine',.04,.07); tone(1040,.14,'sine',.05,.14); }
+    if (kind === 'finish') { [520,660,820,1040].forEach((f,i)=>tone(f,.14,'sine',.04,i*.09)); }
+  }
+
+  function updateSoundButton() {
+    els.soundToggle.textContent = state.soundOn ? '🔊' : '🔇';
+    els.soundToggle.classList.toggle('muted', !state.soundOn);
+    els.soundToggle.setAttribute('aria-label', state.soundOn ? 'Desligar sons' : 'Ligar sons');
+    els.soundToggle.title = state.soundOn ? 'Som ligado' : 'Som desligado';
+  }
+
+  function toggleSound() {
+    state.soundOn = !state.soundOn;
+    try { localStorage.setItem(SOUND_KEY, state.soundOn ? '1' : '0'); } catch (_) {}
+    updateSoundButton();
+    if (state.soundOn) { ensureAudio(); playSound('correct'); }
+  }
+
+  function updateFullscreenButton() {
+    const active = !!document.fullscreenElement;
+    els.fullscreenToggle.textContent = active ? '⤢' : '⛶';
+    els.fullscreenToggle.setAttribute('aria-label', active ? 'Sair da tela cheia' : 'Ativar tela cheia');
+    els.fullscreenToggle.title = active ? 'Sair da tela cheia' : 'Tela cheia';
+  }
+
+  async function toggleFullscreen() {
+    try {
+      if (!document.fullscreenElement) await document.documentElement.requestFullscreen?.();
+      else await document.exitFullscreen?.();
+    } catch (_) {}
+    updateFullscreenButton();
+  }
+
+  function showScreen(id) {
+    screens.forEach(s => $(s).classList.toggle('active', s === id));
+    document.body.classList.toggle('in-game', id === 'gameScreen');
+    document.body.classList.toggle('in-result', id === 'resultScreen');
+  }
+
+  function todayKey() {
+    return new Intl.DateTimeFormat('en-CA', {timeZone:'America/Sao_Paulo'}).format(new Date());
+  }
+
+  function normalizeName(v) {
+    return v.trim().replace(/\s+/g, ' ').slice(0, 24);
+  }
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+
+  function makePools() {
+    const pools = { 'Fácil': {SIM: [], NÃO: []}, 'Média': {SIM: [], NÃO: []}, 'Difícil': {SIM: [], NÃO: []} };
+    BANK.itens.forEach(item => pools[item.dificuldade][item.resposta].push(item));
+    Object.values(pools).forEach(group => Object.values(group).forEach(shuffle));
+    return pools;
+  }
+
+  function getElapsed() {
+    return state.running ? (performance.now() - state.startedAt) / 1000 : 0;
+  }
+
+  function difficultyWeights(elapsed) {
+    let w;
+    if (elapsed < 28) w = {'Fácil':.62,'Média':.31,'Difícil':.07};
+    else if (elapsed < 66) w = {'Fácil':.30,'Média':.50,'Difícil':.20};
+    else w = {'Fácil':.13,'Média':.40,'Difícil':.47};
+
+    // Dificuldade adaptativa leve: quem está voando recebe um pouco mais de desafio;
+    // quem está errando volta a encontrar itens mais acessíveis.
+    if (state.answered >= 5) {
+      const accuracy = state.correct / Math.max(1, state.answered);
+      const recentHits = state.recentOutcomes.filter(Boolean).length;
+      if (accuracy >= .84 || state.streak >= 5 || recentHits >= 4) {
+        const shift = Math.min(.14, w['Fácil'] * .55);
+        w['Fácil'] -= shift; w['Difícil'] += shift * .72; w['Média'] += shift * .28;
+      } else if (accuracy <= .58 || (state.recentOutcomes.length >= 5 && recentHits <= 2)) {
+        const shift = Math.min(.16, w['Difícil'] * .55);
+        w['Difícil'] -= shift; w['Fácil'] += shift * .72; w['Média'] += shift * .28;
+      }
+    }
+    const total = w['Fácil'] + w['Média'] + w['Difícil'];
+    return [['Fácil',w['Fácil']/total],['Média',w['Média']/total],['Difícil',w['Difícil']/total]];
+  }
+
+  function weightedDifficulty(elapsed) {
+    const w = difficultyWeights(elapsed);
+    const r = Math.random();
+    let acc = 0;
+    for (const [name, p] of w) { acc += p; if (r <= acc) return name; }
+    return w[w.length - 1][0];
+  }
+
+  function desiredAnswer() {
+    const last3 = state.lastAnswers.slice(-3);
+    if (last3.length === 3 && last3.every(v => v === 'SIM')) return 'NÃO';
+    if (last3.length === 3 && last3.every(v => v === 'NÃO')) return 'SIM';
+    return Math.random() < .5 ? 'SIM' : 'NÃO';
+  }
+
+  function popFromPool(diff, answer, avoidCategories=[], allowAvoided=false) {
+    const p = state.pools[diff][answer];
+    while (p.length && state.usedIds.has(p[p.length - 1].id)) p.pop();
+    if (!p.length) return null;
+
+    // Procura primeiro uma categoria diferente das duas últimas sem consumir as demais.
+    for (let i=p.length-1; i>=0; i--) {
+      const item = p[i];
+      if (state.usedIds.has(item.id)) { p.splice(i,1); continue; }
+      if (!avoidCategories.includes(item.categoria)) return p.splice(i,1)[0];
+    }
+    if (!allowAvoided) return null;
+
+    // Só no último fallback permite repetir categoria para nunca travar a partida.
+    while (p.length) {
+      const item = p.pop();
+      if (!state.usedIds.has(item.id)) return item;
+    }
+    return null;
+  }
+
+  function drawItem() {
+    if (state.usedIds.size >= BANK.itens.length) return null;
+    const elapsed = getElapsed();
+    const firstDiff = weightedDifficulty(elapsed);
+    const answer = desiredAnswer();
+    const avoidCategories = state.lastCategories.slice(-2);
+    const diffs = [firstDiff, ...['Fácil','Média','Difícil']
+      .filter(x => x !== firstDiff)
+      .sort((a,b)=>Math.abs(difficultyRank[a]-difficultyRank[firstDiff])-Math.abs(difficultyRank[b]-difficultyRank[firstDiff]))];
+    let item = null;
+    // 1) mantém a resposta desejada e varia categoria; 2) aceita inverter resposta para preservar variedade;
+    // 3) somente se necessário permite repetir categoria.
+    for (const d of diffs) { item = popFromPool(d, answer, avoidCategories, false); if (item) break; }
+    if (!item) {
+      for (const d of diffs) { item = popFromPool(d, answer === 'SIM' ? 'NÃO' : 'SIM', avoidCategories, false); if (item) break; }
+    }
+    if (!item) {
+      for (const d of diffs) { item = popFromPool(d, answer, avoidCategories, true); if (item) break; }
+    }
+    if (!item) {
+      for (const d of diffs) { item = popFromPool(d, answer === 'SIM' ? 'NÃO' : 'SIM', avoidCategories, true); if (item) break; }
+    }
+    if (item) {
+      state.usedIds.add(item.id);
+      state.lastAnswers.push(item.resposta);
+      state.lastCategories.push(item.categoria);
+      if (state.lastAnswers.length > 4) state.lastAnswers.shift();
+      if (state.lastCategories.length > 3) state.lastCategories.shift();
+    }
+    return item;
+  }
+
+  function setTerm(item) {
+    state.current = item;
+    els.termText.textContent = item.termo;
+    els.termCard.className = 'term-card enter';
+    const len = item.termo.length;
+    if (len > 40) els.termCard.classList.add('very-long');
+    else if (len > 27) els.termCard.classList.add('long');
+    if (item.dificuldade === 'Média') els.termCard.classList.add('medium');
+    if (item.dificuldade === 'Difícil') els.termCard.classList.add('hard');
+    resetCardTransform();
+    playSound('card');
+    requestAnimationFrame(() => setTimeout(() => els.termCard.classList.remove('enter'), 700));
+  }
+
+  function nextTerm() {
+    if (!state.running) return;
+    const item = drawItem();
+    if (!item) return endGame();
+    setTerm(item);
+    state.locked = false;
+  }
+
+  function getComboBonus(streak) {
+    if (streak === 5) return 100;
+    if (streak === 10) return 250;
+    if (streak >= 15 && streak % 5 === 0) return 500;
+    return 0;
+  }
+
+  function vibrate(pattern) {
+    if (navigator.vibrate) navigator.vibrate(pattern);
+  }
+
+  function replayClass(el, className) {
+    el.classList.remove(className);
+    void el.offsetWidth;
+    el.classList.add(className);
+  }
+
+  function updateStats() {
+    els.scoreLabel.textContent = state.score.toLocaleString('pt-BR');
+    els.streakLabel.textContent = `🔥 ${state.streak}`;
+    els.answeredLabel.textContent = `${state.answered} respondida${state.answered === 1 ? '' : 's'}`;
+    const accuracy = state.answered ? Math.round(state.correct / state.answered * 100) : 0;
+    els.accuracyLabel.textContent = `${accuracy}% acertos`;
+    const streakPill = els.streakLabel.parentElement;
+    streakPill.classList.toggle('hot', state.streak >= 5);
+    streakPill.classList.remove('level-1','level-2','level-3','level-4');
+    if (state.streak >= 15) streakPill.classList.add('level-4');
+    else if (state.streak >= 10) streakPill.classList.add('level-3');
+    else if (state.streak >= 5) streakPill.classList.add('level-2');
+    else if (state.streak >= 3) streakPill.classList.add('level-1');
+  }
+
+  function showFeedback(correct, item, bonus) {
+    els.feedback.className = `feedback show ${correct ? 'correct' : 'wrong'}${bonus ? ' bonus' : ''}`;
+    if (correct) {
+      els.feedback.innerHTML = `<strong>✅ CERTO! +100${bonus ? ` • 🔥 bônus +${bonus}` : ''}</strong><span>${bonus ? 'Sequência mantida. Continue!' : 'Boa! Próximo cartão…'}</span>`;
+    } else {
+      els.feedback.innerHTML = `<strong>❌ OPS! Era ${item.resposta}</strong><span class="fact-highlight">${item.explicacao}</span>`;
+    }
+  }
+
+  function hideFeedback() {
+    els.feedback.className = 'feedback';
+    els.feedback.textContent = '';
+  }
+
+  function showAnswerEffects(correct, bonus, choice) {
+    replayClass(els.screenFlash, correct ? 'correct' : 'wrong');
+    const chosenZone = choice === 'SIM' ? els.yesZone : els.noZone;
+    replayClass(chosenZone, 'pulse-choice');
+
+    if (correct) {
+      playSound(bonus ? 'combo' : 'correct');
+      els.scoreBurst.textContent = '+100';
+      replayClass(els.scoreBurst, 'show');
+      replayClass(els.scoreLabel.parentElement, 'pop');
+      if (bonus) {
+        const easter = state.streak >= 20 && state.streak % 10 === 0;
+        els.comboBurst.textContent = easter ? `🔥 BAH! TÁ VOANDO! +${bonus}` : `🔥 SEQUÊNCIA! +${bonus}`;
+        replayClass(els.comboBurst, 'show');
+      }
+    } else {
+      playSound('wrong');
+    }
+  }
+
+  function checkMidGameRecord() {
+    if (state.recordAnnounced || state.previousBestScore == null || state.score <= state.previousBestScore) return;
+    state.recordAnnounced = true;
+    els.recordBurst.textContent = '🏆 NOVO RECORDE!';
+    replayClass(els.recordBurst, 'show');
+    playSound('combo');
+    vibrate([25,25,55]);
+  }
+
+  function answer(choice) {
+    if (!state.running || state.locked || !state.current) return;
+    state.locked = true;
+    const item = state.current;
+    const correct = choice === item.resposta;
+    state.answered += 1;
+    let bonus = 0;
+
+    if (correct) {
+      state.correct += 1;
+      state.streak += 1;
+      state.bestStreak = Math.max(state.bestStreak, state.streak);
+      state.baseScore += 100;
+      state.score += 100;
+      bonus = getComboBonus(state.streak);
+      if (bonus) { state.bonusScore += bonus; state.score += bonus; }
+      showFeedback(true, item, bonus);
+      vibrate(25);
+    } else {
+      state.wrong += 1;
+      state.streak = 0;
+      showFeedback(false, item, 0);
+      vibrate([45, 35, 45]);
+    }
+
+    state.recentOutcomes.push(correct);
+    if (state.recentOutcomes.length > 5) state.recentOutcomes.shift();
+    updateStats();
+    showAnswerEffects(correct, bonus, choice);
+    checkMidGameRecord();
+    animateCardOut(choice, correct);
+
+    // Ritmo mais fluido: acertos seguem rápido; erros deixam tempo suficiente para ler a explicação.
+    const explanationDelay = Math.min(170, Math.max(0, item.explicacao.length - 65) * 1.8);
+    const wait = correct ? (bonus ? 500 : 360) : 690 + explanationDelay;
+    setTimeout(() => {
+      hideFeedback();
+      if (state.running) nextTerm();
+    }, wait);
+  }
+
+  function animateCardOut(choice, correct) {
+    const dir = choice === 'SIM' ? -1 : 1;
+    els.termCard.classList.remove('dragging');
+    els.termCard.style.transition = 'transform .29s ease, opacity .24s ease';
+    els.termCard.style.transform = `translateX(${dir * 132}%) rotate(${dir * 19}deg) scale(.96)`;
+    els.termCard.style.opacity = '.08';
+    els.termCard.style.boxShadow = correct ? '0 30px 65px rgba(25,150,90,.34)' : '0 30px 65px rgba(190,30,50,.32)';
+  }
+
+  function resetCardTransform(withSnap=false) {
+    state.dragX = 0; state.dragY = 0;
+    if (withSnap) replayClass(els.termCard, 'snap-back');
+    els.termCard.style.transition = '';
+    els.termCard.style.transform = '';
+    els.termCard.style.opacity = '';
+    els.termCard.style.boxShadow = '';
+    els.termCard.style.removeProperty('--dragAlpha');
+    els.termCard.classList.remove('drag-left','drag-right','dragging');
+    els.yesZone.classList.remove('active');
+    els.noZone.classList.remove('active');
+    els.mobileYes.classList.remove('active');
+    els.mobileNo.classList.remove('active');
+  }
+
+  function timerLoop(now) {
+    if (!state.running) return;
+    const elapsed = (now - state.startedAt) / 1000;
+    const rem = Math.max(0, GAME_SECONDS - elapsed);
+    const pct = Math.max(0, rem / GAME_SECONDS * 100);
+    els.timeLabel.textContent = rem.toFixed(1).replace('.', ',');
+    els.timeBar.style.width = `${pct}%`;
+    els.timeLabel.parentElement.classList.toggle('urgent', rem <= 15);
+    els.timeTrack.classList.toggle('warning', rem <= 30 && rem > 10);
+    els.timeTrack.classList.toggle('danger', rem <= 10);
+    const urgentSecond = Math.ceil(rem);
+    if (rem <= 10 && urgentSecond > 0 && urgentSecond !== state.lastUrgentSecond) {
+      state.lastUrgentSecond = urgentSecond;
+      els.urgentCountdown.textContent = urgentSecond;
+      replayClass(els.urgentCountdown, 'pop');
+      if (urgentSecond <= 5) playSound('tick');
+    }
+    if (rem <= 0) return endGame();
+    state.raf = requestAnimationFrame(timerLoop);
+  }
+
+  function resetRoundState(name) {
+    state.player = name;
+    state.running = false;
+    state.locked = true;
+    state.score = 0; state.baseScore = 0; state.bonusScore = 0;
+    state.correct = 0; state.wrong = 0; state.answered = 0;
+    state.streak = 0; state.bestStreak = 0;
+    state.usedIds = new Set(); state.lastAnswers = []; state.lastCategories = []; state.recentOutcomes = []; state.pools = makePools(); state.current = null;
+    const previousBest = bestTodayForName(name);
+    state.previousBestScore = previousBest ? Number(previousBest.score) : null;
+    state.recordAnnounced = false;
+    hideFeedback(); resetCardTransform();
+    els.playerLabel.textContent = name;
+    els.timeLabel.textContent = '100,0';
+    els.timeBar.style.width = '100%';
+    els.timeLabel.parentElement.classList.remove('urgent');
+    els.timeTrack.classList.remove('warning','danger');
+    els.urgentCountdown.classList.remove('pop');
+    els.urgentCountdown.textContent = '';
+    state.lastUrgentSecond = null;
+    els.newRecordBadge.classList.remove('show');
+    updateStats();
+  }
+
+  function runCountdown() {
+    const token = ++state.countdownToken;
+    state.counting = true;
+    els.countdownOverlay.classList.add('show');
+    els.countdownOverlay.setAttribute('aria-hidden', 'false');
+    const sequence = ['3','2','1','BAH!'];
+    let index = 0;
+
+    const step = () => {
+      if (token !== state.countdownToken) return;
+      els.countdownText.textContent = sequence[index];
+      if (sequence[index] === 'BAH!') playSound('go'); else playSound('tick');
+      const ring = els.countdownText.parentElement;
+      replayClass(ring, 'pop');
+      index += 1;
+      if (index < sequence.length) {
+        setTimeout(step, 620);
+      } else {
+        setTimeout(() => {
+          if (token !== state.countdownToken) return;
+          els.countdownOverlay.classList.remove('show');
+          els.countdownOverlay.setAttribute('aria-hidden', 'true');
+          state.counting = false;
+          state.running = true;
+          state.locked = false;
+          state.startedAt = performance.now();
+          nextTerm();
+          cancelAnimationFrame(state.raf);
+          state.raf = requestAnimationFrame(timerLoop);
+        }, 480);
+      }
+    };
+    step();
+  }
+
+  function showTutorial() {
+    els.tutorialOverlay.classList.add('show');
+    els.tutorialOverlay.setAttribute('aria-hidden','false');
+  }
+
+  function hideTutorial() {
+    els.tutorialOverlay.classList.remove('show');
+    els.tutorialOverlay.setAttribute('aria-hidden','true');
+  }
+
+  function startGame(skipTutorial=false) {
+    if (state.counting) return;
+    const name = normalizeName(els.playerName.value);
+    if (!name) {
+      els.playerName.focus();
+      els.playerName.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:260});
+      return;
+    }
+    ensureAudio();
+    cancelAnimationFrame(state.raf);
+    resetRoundState(name);
+    bahOnlineSession = window.ExpedicaoOnline?.startGame({game:'bah-ou-nao-bah',player:name}) || null;
+    hideTutorial();
+    showScreen('gameScreen');
+    if (skipTutorial) runCountdown(); else showTutorial();
+  }
+
+  function classification(score) {
+    if (score >= 5000) return ['🏆','Bah! É uma lenda!'];
+    if (score >= 4000) return ['⭐','Especialista gaúcho'];
+    if (score >= 3000) return ['🧉','Conhecedor do RS'];
+    if (score >= 2000) return ['🚗','Explorador do Sul'];
+    if (score >= 1000) return ['🧳','Turista gaúcho'];
+    return ['🧭','Ainda procurando o RS no mapa'];
+  }
+
+  function bestTodayForName(name) {
+    const key = String(name || '').trim().toLocaleLowerCase('pt-BR');
+    return todayRanking().find(r => String(r.name || '').trim().toLocaleLowerCase('pt-BR') === key) || null;
+  }
+
+  function launchResultConfetti() {
+    const box = document.querySelector('.result-confetti');
+    if (!box) return;
+    box.innerHTML = '';
+    const colors = ['#13784e','#ffd44f','#d82f42','#ffffff','#27b66f'];
+    for (let i=0;i<30;i++) {
+      const piece = document.createElement('span');
+      piece.style.background = colors[i % colors.length];
+      piece.style.setProperty('--x', `${(Math.random()-.5)*560}px`);
+      piece.style.setProperty('--y', `${130+Math.random()*270}px`);
+      piece.style.setProperty('--r', `${(Math.random()-.5)*900}deg`);
+      piece.style.animationDelay = `${Math.random()*.18}s`;
+      box.appendChild(piece);
+    }
+    replayClass(box,'go');
+  }
+
+  function animateResult(score) {
+    els.finalScore.classList.add('counting');
+    const start = performance.now(), duration = 900;
+    function frame(now) {
+      const t = Math.min(1, (now-start)/duration);
+      const eased = 1 - Math.pow(1-t,3);
+      els.finalScore.textContent = Math.round(score*eased).toLocaleString('pt-BR');
+      if (t < 1) requestAnimationFrame(frame); else els.finalScore.classList.remove('counting');
+    }
+    requestAnimationFrame(frame);
+    document.querySelectorAll('.result-grid>div').forEach((el,i)=>{
+      el.classList.remove('reveal');
+      setTimeout(()=>el.classList.add('reveal'), 140 + i*85);
+    });
+    replayClass(els.resultMedal,'celebrate');
+  }
+
+  function buildResultInsight() {
+    const speed = state.answered ? (GAME_SECONDS / state.answered).toFixed(1).replace('.', ',') : '—';
+    const accuracy = state.answered ? Math.round(state.correct / state.answered * 100) : 0;
+    if (!state.answered) return `🧉 A partida terminou antes da primeira resposta. Na próxima, arraste o cartão ou toque em SIM/NÃO!`;
+    if (state.bestStreak >= 20) return `🔥 <strong>Bah! ${state.bestStreak} acertos seguidos!</strong> Você respondeu ${state.answered} associações em 100 segundos.`;
+    if (accuracy >= 90 && state.answered >= 15) return `🎯 <strong>${accuracy}% de aproveitamento!</strong> Você respondeu ${state.answered} associações em 100 segundos.`;
+    if (state.answered >= 35) return `⚡ <strong>Ritmo forte!</strong> Foram ${state.answered} associações — cerca de uma decisão a cada ${speed} s.`;
+    return `🃏 Você respondeu <strong>${state.answered} associações</strong> em 100 segundos. Tente superar esse número na próxima!`;
+  }
+
+  function cancelAutoReturn() {
+    clearTimeout(state.resultResetTimer); clearInterval(state.resultResetInterval);
+    state.resultResetTimer = 0; state.resultResetInterval = 0;
+  }
+
+  function returnToStart(clearName=true) {
+    cancelAutoReturn();
+    state.countdownToken += 1; state.counting = false; state.running = false; state.locked = true;
+    cancelAnimationFrame(state.raf);
+    els.countdownOverlay.classList.remove('show'); hideTutorial(); hideFeedback();
+    if (clearName) els.playerName.value = '';
+    showScreen('startScreen');
+    setTimeout(()=>els.playerName.focus(), 80);
+  }
+
+  function scheduleAutoReturn(seconds=30) {
+    cancelAutoReturn();
+    let left = seconds;
+    const render = () => { els.autoResetText.innerHTML = `🎪 Modo Feira: voltando ao início em <strong>${left} s</strong>`; };
+    render();
+    state.resultResetInterval = setInterval(() => { left -= 1; render(); }, 1000);
+    state.resultResetTimer = setTimeout(() => returnToStart(true), seconds * 1000);
+  }
+
+  function endGame() {
+    if (!state.running) return;
+    state.running = false; state.locked = true;
+    cancelAnimationFrame(state.raf);
+    els.timeLabel.textContent = '0,0';
+    els.timeBar.style.width = '0%';
+    const accuracy = state.answered ? Math.round(state.correct / state.answered * 100) : 0;
+    const [medal, label] = classification(state.score);
+    els.resultMedal.textContent = medal;
+    els.resultClass.textContent = label;
+    const previousBest = bestTodayForName(state.player);
+    const result = {name:state.player, score:state.score, correct:state.correct, wrong:state.wrong, answered:state.answered, bestStreak:state.bestStreak, bonus:state.bonusScore, accuracy, date:todayKey(), playedAt:Date.now()};
+    const isNewRecord = state.score > 0 && (!previousBest || compareResults(result, previousBest) < 0);
+    els.newRecordBadge.classList.toggle('show', isNewRecord);
+    els.finalScore.textContent = '0';
+    els.finalCorrect.textContent = state.correct;
+    els.finalWrong.textContent = state.wrong;
+    els.finalAccuracy.textContent = `${accuracy}%`;
+    els.finalStreak.textContent = state.bestStreak;
+    els.finalAnswered.textContent = state.answered;
+    els.finalBonus.textContent = state.bonusScore.toLocaleString('pt-BR');
+    els.resultInsight.innerHTML = buildResultInsight();
+    if (bahOnlineSession) { window.ExpedicaoOnline?.finishGame(bahOnlineSession,{score:state.score,correct:state.correct,wrong:state.wrong,answered:state.answered,bestStreak:state.bestStreak,bonus:state.bonusScore,duration:Math.min(GAME_SECONDS,getElapsed())}); bahOnlineSession=null; }
+    saveRanking(result);
+    playSound('finish');
+    if (isNewRecord || state.score >= 3000) launchResultConfetti();
+    try {
+      window.dispatchEvent(new CustomEvent('bahGameFinished', {detail:{player:state.player,score:state.score,correct:state.correct,wrong:state.wrong,answered:state.answered,bestStreak:state.bestStreak,bonus:state.bonusScore,accuracy,date:todayKey()}}));
+    } catch (_) {}
+    showScreen('resultScreen');
+    animateResult(state.score);
+    scheduleAutoReturn(30);
+  }
+
+  function loadRanking() {
+    try { return JSON.parse(localStorage.getItem(RANKING_KEY) || '[]'); } catch (_) { return []; }
+  }
+
+  function saveRanking(result) {
+    try {
+      const all = loadRanking().filter(r => r && r.date);
+      all.push(result);
+      const cutoff = new Date(); cutoff.setDate(cutoff.getDate() - 14);
+      const filtered = all.filter(r => new Date(r.playedAt || 0) >= cutoff);
+      localStorage.setItem(RANKING_KEY, JSON.stringify(filtered.slice(-500)));
+    } catch (_) {
+      // O jogo continua normalmente mesmo se o navegador bloquear armazenamento local.
+    }
+  }
+
+  function todayRanking() {
+    const day = todayKey();
+    const rows = loadRanking().filter(r => r.date === day);
+    const best = new Map();
+    rows.forEach(r => {
+      const k = String(r.name || '').trim().toLocaleLowerCase('pt-BR');
+      const old = best.get(k);
+      if (!old || compareResults(r, old) < 0) best.set(k, r);
+    });
+    return [...best.values()].sort(compareResults).slice(0, 20);
+  }
+
+  function compareResults(a,b) {
+    return (b.score-a.score) || (b.correct-a.correct) || (a.wrong-b.wrong) || (b.bestStreak-a.bestStreak) || (b.answered-a.answered) || ((a.playedAt||0)-(b.playedAt||0));
+  }
+
+  function renderRanking() {
+    const rows = todayRanking();
+    if (!rows.length) {
+      els.rankingList.innerHTML = '<div class="ranking-empty">Ainda não há partidas registradas hoje neste dispositivo.</div>';
+      return;
+    }
+    els.rankingList.innerHTML = rows.map((r,i)=>`<div class="rank-row"><div class="rank-pos">${i<3?['🥇','🥈','🥉'][i]:i+1}</div><div class="rank-name">${escapeHtml(r.name)}</div><div class="rank-meta"><strong>${Number(r.score).toLocaleString('pt-BR')} pts</strong><small>${r.correct} acertos • 🔥 ${r.bestStreak}</small></div></div>`).join('');
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  }
+
+  function openRanking() { renderRanking(); if (els.rankingDialog.showModal) els.rankingDialog.showModal(); else els.rankingDialog.setAttribute('open',''); }
+  function closeRanking() { if (els.rankingDialog.close) els.rankingDialog.close(); else els.rankingDialog.removeAttribute('open'); }
+
+  // Pointer drag
+  els.termCard.addEventListener('pointerdown', (e) => {
+    if (!state.running || state.locked) return;
+    state.pointerId = e.pointerId; state.dragStartX = e.clientX; state.dragStartY = e.clientY; state.dragX = 0; state.dragY = 0;
+    els.termCard.setPointerCapture?.(e.pointerId); els.termCard.classList.add('dragging');
+  });
+  els.termCard.addEventListener('pointermove', (e) => {
+    if (state.pointerId !== e.pointerId || state.locked || !state.running) return;
+    const dx = e.clientX - state.dragStartX, dy = e.clientY - state.dragStartY; state.dragX = dx; state.dragY = dy;
+    const stageW = els.termCard.parentElement.clientWidth || innerWidth;
+    const max = Math.max(120, Math.min(270, stageW * .39));
+    const clamped = Math.max(-max, Math.min(max, dx));
+    const ratio = Math.min(1, Math.abs(clamped) / max);
+    els.termCard.style.transform = `translateX(${clamped}px) translateY(${Math.max(-18,Math.min(18,dy*.12))}px) rotate(${clamped/max*15}deg) rotateY(${clamped/max*5}deg) scale(${1+ratio*.025})`;
+    els.termCard.style.setProperty('--dragAlpha', String(.10 + ratio*.62));
+    els.termCard.classList.toggle('drag-left', clamped < -8);
+    els.termCard.classList.toggle('drag-right', clamped > 8);
+    const horizontalIntent = Math.abs(dx) > Math.abs(dy) * 1.15;
+    const yesActive = horizontalIntent && clamped < -max*.54, noActive = horizontalIntent && clamped > max*.54;
+    els.yesZone.classList.toggle('active', yesActive);
+    els.noZone.classList.toggle('active', noActive);
+    els.mobileYes.classList.toggle('active', horizontalIntent && clamped < -max*.30);
+    els.mobileNo.classList.toggle('active', horizontalIntent && clamped > max*.30);
+  });
+  function releasePointer(e) {
+    if (state.pointerId !== e.pointerId) return;
+    const dx = state.dragX, dy = state.dragY; state.pointerId = null;
+    els.termCard.releasePointerCapture?.(e.pointerId);
+    const stageW = els.termCard.parentElement.clientWidth || innerWidth;
+    const threshold = Math.max(92, Math.min(150, stageW * .22));
+    const horizontalIntent = Math.abs(dx) >= Math.abs(dy) * 1.15;
+    if (horizontalIntent && dx <= -threshold) answer('SIM');
+    else if (horizontalIntent && dx >= threshold) answer('NÃO');
+    else resetCardTransform(true);
+  }
+  els.termCard.addEventListener('pointerup', releasePointer);
+  els.termCard.addEventListener('pointercancel', releasePointer);
+
+  // Buttons and keyboard
+  els.yesZone.addEventListener('click', ()=>answer('SIM'));
+  els.mobileYes.addEventListener('click', ()=>answer('SIM'));
+  els.noZone.addEventListener('click', ()=>answer('NÃO'));
+  els.mobileNo.addEventListener('click', ()=>answer('NÃO'));
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' && state.running) { e.preventDefault(); answer('SIM'); }
+    if (e.key === 'ArrowRight' && state.running) { e.preventDefault(); answer('NÃO'); }
+    if (e.key === 'Enter' && $('startScreen').classList.contains('active')) startGame(false);
+  });
+
+  els.startBtn.addEventListener('click', () => startGame(false));
+  els.tutorialStartBtn.addEventListener('click', () => { hideTutorial(); runCountdown(); });
+  els.soundToggle.addEventListener('click', toggleSound);
+  els.fullscreenToggle.addEventListener('click', toggleFullscreen);
+  document.addEventListener('fullscreenchange', updateFullscreenButton);
+  els.nextPlayerBtn.addEventListener('click', () => returnToStart(true));
+  els.playAgainBtn.addEventListener('click', () => { cancelAutoReturn(); els.playerName.value = state.player; startGame(true); });
+  els.backHomeBtn.addEventListener('click', () => returnToStart(false));
+  els.openRankingBtn.addEventListener('click', () => { location.href='../ranking/?jogo=bah-ou-nao-bah'; });
+  els.resultRankingBtn.addEventListener('click', () => { cancelAutoReturn(); location.href='../ranking/?jogo=bah-ou-nao-bah'; });
+  els.closeRankingBtn.addEventListener('click', () => { closeRanking(); if ($('resultScreen').classList.contains('active')) scheduleAutoReturn(30); });
+  els.clearRankingBtn.addEventListener('click', () => {
+    if (confirm('Apagar o ranking salvo neste dispositivo?')) { localStorage.removeItem(RANKING_KEY); renderRanking(); }
+  });
+  els.rankingDialog.addEventListener('click', (e)=>{ if(e.target===els.rankingDialog) { closeRanking(); if ($('resultScreen').classList.contains('active')) scheduleAutoReturn(30); } });
+  els.rankingDialog.addEventListener('close', ()=>{ if ($('resultScreen').classList.contains('active')) scheduleAutoReturn(30); });
+
+  updateSoundButton();
+  updateFullscreenButton();
+
+  // API mínima para testes e integração futura.
+  window.BahGame = {
+    getBankSize: () => BANK.itens.length,
+    getState: () => ({running:state.running, counting:state.counting, score:state.score, correct:state.correct, wrong:state.wrong, answered:state.answered, streak:state.streak, used:state.usedIds.size, current:state.current?.termo || null, category:state.current?.categoria || null, previousBestScore:state.previousBestScore}),
+    start: () => startGame(true),
+    startWithTutorial: () => startGame(false),
+    answer,
+    end: endGame
+  };
+})();
+
+</script>
+</body>
+</html>

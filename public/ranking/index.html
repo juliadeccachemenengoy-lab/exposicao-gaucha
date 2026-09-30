@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b4d32">
+<title>Ranking da Feira — Expedição Gaúcha</title>
+<style>
+:root{--green:#0b5b3b;--green2:#073d2a;--red:#ba2838;--yellow:#f4c542;--cream:#fff8e8;--ink:#163127;--muted:#6b7b73;--line:rgba(10,78,51,.12);--shadow:0 18px 55px rgba(5,48,32,.13)}
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;background:radial-gradient(circle at 90% 0,#fff1b9 0,transparent 28%),linear-gradient(150deg,#f4eddb,#fffdf7);color:var(--ink);min-height:100vh}.wrap{width:min(1180px,calc(100% - 28px));margin:auto;padding:24px 0 54px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.back,.refresh{display:inline-flex;align-items:center;gap:8px;background:white;border:1px solid var(--line);border-radius:14px;padding:10px 13px;font-weight:850;text-decoration:none;color:#0b4d32;box-shadow:0 7px 22px rgba(5,48,32,.06);cursor:pointer}.hero{margin-top:22px;border-radius:30px;background:linear-gradient(135deg,#073d2a,#0d6b45 58%,#145b3c);color:white;padding:30px;box-shadow:0 22px 60px rgba(5,48,32,.18);position:relative;overflow:hidden}.hero:after{content:'RS';position:absolute;right:18px;top:-24px;font-size:140px;font-weight:1000;color:rgba(255,255,255,.055);letter-spacing:-10px}.hero span{font-size:11px;font-weight:950;letter-spacing:1.6px;color:var(--yellow)}.hero h1{font-size:clamp(38px,7vw,68px);letter-spacing:-3px;margin:6px 0 10px}.hero p{color:#d1e2da;max-width:760px;line-height:1.5;margin:0}.period-row,.tabs,.subtabs{display:flex;gap:8px;flex-wrap:wrap}.period-row{margin-top:18px}.pill{border:1px solid var(--line);background:white;border-radius:999px;padding:10px 15px;font-weight:900;color:#315447;cursor:pointer}.pill.active{background:var(--yellow);color:#3a2a00;border-color:transparent}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.stat{background:white;border:1px solid var(--line);border-radius:20px;padding:17px;box-shadow:0 8px 26px rgba(5,48,32,.06)}.stat small{display:block;color:var(--muted);font-weight:800;margin-bottom:5px}.stat strong{font-size:30px;color:var(--green)}.game-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0 26px}.game-stat{background:white;border:1px solid var(--line);border-radius:20px;padding:16px}.game-stat h3{margin:0 0 10px;font-size:17px}.mini-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.mini{background:#f7f2e5;border-radius:12px;padding:10px}.mini small{display:block;color:var(--muted);font-weight:800}.mini b{font-size:19px}.board{background:white;border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);overflow:hidden}.board-head{padding:20px;display:flex;justify-content:space-between;align-items:end;gap:14px;flex-wrap:wrap;border-bottom:1px solid var(--line)}.board-head h2{margin:2px 0 0;font-size:28px}.kicker{font-size:10px;font-weight:950;letter-spacing:1.5px;color:var(--red)}.tabs{padding:12px 18px;border-bottom:1px solid var(--line);background:#fffdf8}.tab{border:0;background:#edf4f0;color:#315447;padding:11px 14px;border-radius:14px;font-weight:900;cursor:pointer}.tab.active{background:var(--green);color:white}.subtabs{padding:12px 18px 0}.subtab{border:1px solid var(--line);background:white;border-radius:12px;padding:8px 12px;font-weight:900;color:#416356;cursor:pointer}.subtab.active{background:#fff0b9;border-color:#eac953;color:#6d5100}.table-wrap{overflow:auto}.rank-table{width:100%;border-collapse:collapse;min-width:760px}.rank-table th{text-align:left;padding:12px 14px;color:#6c7b74;font-size:11px;text-transform:uppercase;letter-spacing:.7px;background:#fbfaf5;position:sticky;top:0}.rank-table td{padding:13px 14px;border-top:1px solid #edf0ec;font-weight:750}.rank-table tr:nth-child(-n+3) td{background:#fffaf0}.pos{font-size:19px;width:64px}.player{font-weight:950;color:var(--green2)}.score{font-weight:1000;color:var(--green);font-size:19px}.empty,.loading,.error{padding:38px 22px;text-align:center;color:var(--muted);font-weight:850}.error{color:#a12634}.live{display:inline-flex;align-items:center;gap:7px;font-size:12px;color:var(--muted);font-weight:800}.dot{width:8px;height:8px;border-radius:50%;background:#27a866;box-shadow:0 0 0 4px rgba(39,168,102,.12)}.footer-note{text-align:center;color:#74827b;font-size:12px;margin-top:18px}.offline-note{display:none;margin:14px 0;background:#fff2c9;border:1px solid #ebd07c;padding:12px 15px;border-radius:15px;font-weight:800;color:#745700}.offline-note.show{display:block}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.game-stats{grid-template-columns:1fr}.hero{padding:24px}.hero h1{letter-spacing:-2px}.hero:after{font-size:100px}}@media(max-width:540px){.stats{grid-template-columns:1fr 1fr}.stat strong{font-size:25px}.wrap{width:min(100% - 18px,1180px)}.hero{border-radius:22px}.board{border-radius:20px}.tabs{flex-direction:column}.tab{text-align:left}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <div class="top"><a class="back" href="../">← Voltar ao portal</a><button id="refreshBtn" class="refresh" type="button">↻ Atualizar</button></div>
+  <section class="hero"><span>EXPEDIÇÃO GAÚCHA</span><h1>🏆 Ranking da Feira</h1><p>Todas as partidas concluídas ficam registradas separadamente. O placar é compartilhado entre os aparelhos conectados ao mesmo projeto Netlify.</p><div class="period-row"><button class="pill active" data-period="hoje">Hoje</button><button class="pill" data-period="todos">Todos os registros</button></div></section>
+  <div id="offlineNote" class="offline-note">Sem conexão com o ranking agora. Os jogos continuam funcionando e os resultados pendentes tentam ser enviados quando a internet voltar.</div>
+
+  <section class="stats" aria-label="Resumo da Expedição">
+    <div class="stat"><small>🎮 Partidas iniciadas</small><strong id="totalStarted">—</strong></div>
+    <div class="stat"><small>🏁 Partidas concluídas</small><strong id="totalFinished">—</strong></div>
+    <div class="stat"><small>👥 Participantes</small><strong id="totalPlayers">—</strong></div>
+    <div class="stat"><small>✅ Taxa de conclusão</small><strong id="completionRate">—</strong></div>
+  </section>
+  <section id="gameStats" class="game-stats" aria-label="Estatísticas por jogo"></section>
+
+  <section class="board">
+    <div class="board-head"><div><span class="kicker">PLACAR ONLINE</span><h2 id="boardTitle">Rota pelo Rio Grande do Sul</h2></div><div class="live"><span class="dot"></span><span id="updatedAt">Atualizando…</span></div></div>
+    <div class="tabs">
+      <button class="tab" data-game="personalidades">🧩 Personalidades</button>
+      <button class="tab active" data-game="rota">🗺️ Rota</button>
+      <button class="tab" data-game="bah-ou-nao-bah">↔️ Bah ou Não Bah?</button>
+    </div>
+    <div id="subtabs" class="subtabs" hidden><button class="subtab active" data-mode="fair">🎪 Feira Cultural</button><button class="subtab" data-mode="total">🏆 Modo Total</button></div>
+    <div id="tableWrap" class="table-wrap"><div class="loading">Carregando ranking…</div></div>
+  </section>
+  <p class="footer-note">O ranking atualiza automaticamente a cada 15 segundos. A mesma pessoa pode aparecer várias vezes: cada partida concluída é um registro independente.</p>
+</main>
+<script>
+(() => {
+  const labels={personalidades:'Descubra o Sul-Rio-Grandense',rota:'Rota pelo Rio Grande do Sul','bah-ou-nao-bah':'Bah ou Não Bah?'};
+  const params=new URLSearchParams(location.search);
+  let game=['personalidades','rota','bah-ou-nao-bah'].includes(params.get('jogo'))?params.get('jogo'):'rota';
+  let mode=params.get('modo')==='total'?'total':'fair';
+  let period='hoje'; let loading=false;
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const fmt=n=>Number(n||0).toLocaleString('pt-BR');
+  const clock=iso=>{try{return new Intl.DateTimeFormat('pt-BR',{timeZone:'America/Sao_Paulo',hour:'2-digit',minute:'2-digit'}).format(new Date(iso))}catch{return '—'}};
+  const duration=n=>Number(n||0).toFixed(1).replace('.',',')+' s';
+
+  function setActive(){
+    document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.game===game));
+    document.querySelectorAll('.subtab').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
+    $('subtabs').hidden=game!=='personalidades'; $('boardTitle').textContent=labels[game];
+    const u=new URL(location.href);u.searchParams.set('jogo',game); if(game==='personalidades')u.searchParams.set('modo',mode);else u.searchParams.delete('modo'); history.replaceState(null,'',u);
+  }
+
+  function pos(i){return i===1?'🥇':i===2?'🥈':i===3?'🥉':i;}
+  function renderRows(data){
+    const rows=data.resultados||[]; if(!rows.length){$('tableWrap').innerHTML='<div class="empty">Ainda não há resultados neste período. Seja o primeiro! 🎉</div>';return;}
+    let heads='', body='';
+    if(game==='personalidades'){
+      heads='<th>#</th><th>Participante</th><th>Acertos</th><th>Pontos</th><th>Tempo</th><th>Horário</th>';
+      body=rows.map(r=>`<tr><td class="pos">${pos(r.posicao)}</td><td class="player">${esc(r.jogador)}</td><td>${r.acertos||0}</td><td class="score">${fmt(r.pontuacao)}</td><td>${duration(r.duracao)}</td><td>${clock(r.finalizadaEm)}</td></tr>`).join('');
+    } else if(game==='rota'){
+      heads='<th>#</th><th>Participante</th><th>Acertos</th><th>Pontos</th><th>Tempo</th><th>Horário</th>';
+      body=rows.map(r=>`<tr><td class="pos">${pos(r.posicao)}</td><td class="player">${esc(r.jogador)}</td><td>${r.acertos||0}/10</td><td class="score">${fmt(r.pontuacao)}</td><td>${duration(r.duracao)}</td><td>${clock(r.finalizadaEm)}</td></tr>`).join('');
+    } else {
+      heads='<th>#</th><th>Participante</th><th>Acertos</th><th>Erros</th><th>Sequência</th><th>Pontos</th><th>Horário</th>';
+      body=rows.map(r=>`<tr><td class="pos">${pos(r.posicao)}</td><td class="player">${esc(r.jogador)}</td><td>${r.acertos||0}</td><td>${r.erros||0}</td><td>🔥 ${r.sequencia||0}</td><td class="score">${fmt(r.pontuacao)}</td><td>${clock(r.finalizadaEm)}</td></tr>`).join('');
+    }
+    $('tableWrap').innerHTML=`<table class="rank-table"><thead><tr>${heads}</tr></thead><tbody>${body}</tbody></table>`;
+  }
+
+  function renderStats(data){
+    $('totalStarted').textContent=fmt(data.total?.iniciadas); $('totalFinished').textContent=fmt(data.total?.concluidas); $('totalPlayers').textContent=fmt(data.total?.participantes); $('completionRate').textContent=(data.total?.taxaConclusao||0)+'%';
+    $('gameStats').innerHTML=Object.values(data.jogos||{}).map(s=>`<article class="game-stat"><h3>${esc(s.nome)}</h3><div class="mini-grid"><div class="mini"><small>Iniciadas</small><b>${fmt(s.iniciadas)}</b></div><div class="mini"><small>Concluídas</small><b>${fmt(s.concluidas)}</b></div><div class="mini"><small>Participantes</small><b>${fmt(s.participantes)}</b></div><div class="mini"><small>Média de pontos</small><b>${fmt(s.mediaPontuacao)}</b></div></div></article>`).join('');
+  }
+
+  async function load(){
+    if(loading)return; loading=true; $('offlineNote').classList.toggle('show',!navigator.onLine);
+    try{
+      const qs=new URLSearchParams({jogo:game,periodo:period}); if(game==='personalidades')qs.set('modo',mode);
+      const [rankRes,statsRes]=await Promise.all([fetch('/api/ranking?'+qs,{cache:'no-store'}),fetch('/api/estatisticas?periodo='+period,{cache:'no-store'})]);
+      if(!rankRes.ok||!statsRes.ok)throw new Error('API');
+      const rank=await rankRes.json(),stats=await statsRes.json(); if(!rank.ok||!stats.ok)throw new Error('API');
+      renderRows(rank);renderStats(stats);$('updatedAt').textContent='Atualizado às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});$('offlineNote').classList.remove('show');
+    }catch(e){$('tableWrap').innerHTML='<div class="error">Não foi possível carregar o ranking agora. Verifique a conexão ou se o projeto já foi publicado no Netlify.</div>';$('offlineNote').classList.add('show');}
+    finally{loading=false;}
+  }
+
+  document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{game=b.dataset.game;setActive();load();});
+  document.querySelectorAll('.subtab').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;setActive();load();});
+  document.querySelectorAll('[data-period]').forEach(b=>b.onclick=()=>{period=b.dataset.period;document.querySelectorAll('[data-period]').forEach(x=>x.classList.toggle('active',x===b));load();});
+  $('refreshBtn').onclick=load; window.addEventListener('online',load); setActive();load();setInterval(load,15000);
+})();
+</script>
+</body></html>
